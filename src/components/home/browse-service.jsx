@@ -2,13 +2,13 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import EmptyServices from "@/components/services/empty-services";
 import ServiceCard from "@/components/services/service-card";
-import { getLimitServices } from "@/lib/actions/services";
+import { getServices } from "@/lib/actions/services";
 
 const BrowseService = async () => {
     let services = [];
 
     try {
-        services = await getLimitServices("status=active&limit=6");
+        services = await getServices("status=active&limit=6");
     } catch {
         services = [];
     }

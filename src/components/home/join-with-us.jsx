@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const JoinWithUs = () => (
-    <section className="bg-background py-16 sm:py-20 lg:pb-24">
+    <section className="bg-background py-16 sm:py-20 lg:pb-35">
         <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-12">
             <p className="text-sm font-semibold tracking-[0.16em] text-ash uppercase">Join With Us</p>
             <h2 className="mt-2 font-heading text-4xl font-semibold tracking-tight text-charcoal sm:text-5xl">
@@ -36,7 +36,7 @@ const JoinWithUs = () => (
                         alt="Salon professionals ready to welcome clients"
                         fill
                         sizes="(min-width: 1024px) 50vw, 100vw"
-                        className="object-cover object-[95%_center]"
+                        className="object-cover object-[100%_center]"
                     />
                 </div>
             </div>

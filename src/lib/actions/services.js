@@ -9,7 +9,7 @@ export const getCategories = async()=>{
     return await res.json();
 }
 
-export const getLimitServices = async (query = "") => {
+export const getServices = async (query = "") => {
   const res = await fetch(`${BASE_URL}/services?${query}`, {
     cache: "no-store",
   });
@@ -18,4 +18,5 @@ export const getLimitServices = async (query = "") => {
   }
   return await res.json();
 };
+
 
