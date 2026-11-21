@@ -1,6 +1,14 @@
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
+export const getCategories = async()=>{
+    const res = await fetch(`${BASE_URL}/categories`, { cache: "no-store" });
+    if (!res.ok) {
+      throw new Error("Unable to load categories");
+    }
+    return await res.json();
+}
+
 export const getLimitServices = async (query = "") => {
   const res = await fetch(`${BASE_URL}/services?${query}`, {
     cache: "no-store",
@@ -10,3 +18,4 @@ export const getLimitServices = async (query = "") => {
   }
   return await res.json();
 };
+
