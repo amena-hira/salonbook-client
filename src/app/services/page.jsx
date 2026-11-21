@@ -3,18 +3,21 @@ import ServicesCatalog from "@/components/services/services-catalog";
 import { getCategories, getServices } from "@/lib/actions/services";
 
 const ServicesPage = async ({ searchParams }) => {
-    const { category = "" } = await searchParams;
-    let services = [];
+    const search = await searchParams;
+    const urlSearch = new URLSearchParams(search);
+    if (!urlSearch.has("status")) urlSearch.set("status", "active");
+    if (!urlSearch.has("sortBy")) urlSearch.set("sortBy", "price");
+    if (!urlSearch.has("order")) urlSearch.set("order", "asc");
+    const query = urlSearch.toString();
+    const category = search.category ?? "";
     let categories = [];
+    let services = [];
 
     try {
-        [services, categories] = await Promise.all([
-            getServices("status=active"),
-            getCategories(),
-        ]);
+        [services, categories] = await Promise.all([getServices(query), getCategories()]);
     } catch {
-        services = [];
         categories = [];
+        services = [];
     }
 
     return (
@@ -41,7 +44,18 @@ const ServicesPage = async ({ searchParams }) => {
                     </p>
                 </div>
             </section>
-            <ServicesCatalog services={services} categories={categories} initialCategoryId={category} />
+            <ServicesCatalog
+                services={services}
+                categories={categories}
+                initialFilters={{
+                    category,
+                    search: search.search ?? "",
+                    minimumPrice: search.minPrice ?? "",
+                    maximumPrice: search.maxPrice ?? "",
+                    durations: search.duration ? search.duration.split(",") : [],
+                    sort: search.order === "desc" ? "price-desc" : "price-asc",
+                }}
+            />
         </>
     );
 };
