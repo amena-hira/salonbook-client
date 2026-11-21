@@ -19,4 +19,7 @@ export const getServices = async (query = "") => {
   return await res.json();
 };
 
-
+export const getServiceById = async(serviceId) =>{
+  const res = await fetch(`${BASE_URL}/services/${serviceId}`);
+  return res.json();
+}
