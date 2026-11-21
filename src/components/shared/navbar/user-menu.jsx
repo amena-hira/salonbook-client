@@ -18,12 +18,12 @@ const UserMenu = () => (
   <DropdownMenu>
     <DropdownMenuTrigger
       aria-label="Open user menu"
-      className="flex items-center gap-2 rounded-full outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-cream"
+      className="flex items-center rounded-full outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-cream sm:gap-2"
     >
       <span className="flex size-10 items-center justify-center rounded-full bg-[#c9aa95] font-heading text-sm font-semibold text-charcoal">
         SA
       </span>
-      <ChevronDown className="size-5 text-white" aria-hidden="true" />
+      <ChevronDown className="hidden size-5 text-white sm:block" aria-hidden="true" />
     </DropdownMenuTrigger>
     <DropdownMenuContent
       align="start"

@@ -1,5 +1,5 @@
 import { Inter, Playfair_Display } from "next/font/google";
-import Navbar from "@/components/shared/navbar";
+import Navbar from "@/components/shared/navbar/navbar";
 import "./globals.css";
 
 const inter = Inter({

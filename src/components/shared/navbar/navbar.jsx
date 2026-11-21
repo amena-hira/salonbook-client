@@ -1,15 +1,9 @@
 import Link from "next/link";
 import { Bell, Menu, Scissors } from "lucide-react";
-import UserMenu from "@/components/shared/user-menu";
+import NavLinks from "@/components/shared/navbar/nav-links";
+import UserMenu from "@/components/shared/navbar/user-menu";
 
-const user = true;
-
-const navigation = [
-  { label: "Home", href: "/" },
-  { label: "Browse Services", href: "/services" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
-];
+const user = false;
 
 const MobileNavigation = () => (
   <details className="group relative lg:hidden">
@@ -22,27 +16,17 @@ const MobileNavigation = () => (
     </summary>
     <nav
       aria-label="Mobile navigation"
-      className="absolute right-0 top-[calc(100%+18px)] w-72 rounded-xl border border-white/10 bg-charcoal p-4 shadow-xl"
+      className="absolute right-0 top-[calc(100%+18px)] w-72 rounded-xl border border-white/10 bg-charcoal p-3 shadow-xl"
     >
-      <div className="mb-3 border-b border-white/15 pb-3 sm:hidden">
-        {user && (
-          <>
-            <p className="font-semibold text-white">Sarah Ahmed</p>
-            <p className="text-sm text-white/65">sarah.ahmed@example.com</p>
-          </>
-        )}
+      <div className="flex flex-col items-stretch gap-1">
+        <NavLinks mobile />
       </div>
-      <div className="flex flex-col">
-        {navigation.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="rounded-md px-3 py-3 text-base font-medium text-white transition-colors hover:bg-white/10"
-          >
-            {item.label}
-          </Link>
-        ))}
-      </div>
+      <Link
+        href="/book-appointment"
+        className="mt-3 block w-full rounded-md bg-cream px-4 py-3 text-center text-sm font-semibold text-charcoal transition-colors hover:bg-white"
+      >
+        Book Appointment
+      </Link>
     </nav>
   </details>
 );
@@ -60,24 +44,16 @@ const Navbar = () => (
       </Link>
 
       <nav aria-label="Main navigation" className="hidden items-center gap-8 xl:gap-12 lg:flex">
-        {navigation.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="border-b-2 border-transparent py-2 text-base font-medium text-white/90 transition-colors hover:border-cream hover:text-white"
-          >
-            {item.label}
-          </Link>
-        ))}
+        <NavLinks />
       </nav>
 
       <div className="flex items-center gap-1 sm:gap-5">
         {user ? (
-          <div className="hidden items-center gap-3 sm:flex">
+          <div className="flex items-center gap-1 sm:gap-3">
             <button
               type="button"
               aria-label="Notifications"
-              className="relative grid size-10 place-items-center rounded-full transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream"
+              className="relative hidden size-10 place-items-center rounded-full transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream sm:grid"
             >
               <Bell className="size-6" />
               <span className="absolute right-1 top-1 size-2.5 rounded-full bg-red-500 ring-2 ring-charcoal" />
@@ -94,10 +70,9 @@ const Navbar = () => (
         )}
         <Link
           href="/book-appointment"
-          className="rounded-md bg-cream px-3 py-2.5 text-sm font-semibold whitespace-nowrap text-charcoal transition-colors hover:bg-white sm:px-6 sm:py-3"
+          className="hidden rounded-md bg-cream px-6 py-3 text-sm font-semibold whitespace-nowrap text-charcoal transition-colors hover:bg-white lg:block"
         >
-          <span className="sm:hidden">Book</span>
-          <span className="hidden sm:inline">Book Appointment</span>
+          Book Appointment
         </Link>
         <MobileNavigation />
       </div>
