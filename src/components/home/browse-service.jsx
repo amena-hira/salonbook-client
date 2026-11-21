@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import EmptyServices from "@/components/services/empty-services";
 import ServiceCard from "@/components/services/service-card";
 import { getLimitServices } from "@/lib/actions/services";
 
@@ -40,7 +41,7 @@ const BrowseService = async () => {
                         ))}
                     </div>
                 ) : (
-                    <p className="mt-10 text-ash">Services are unavailable right now. Please try again soon.</p>
+                    <EmptyServices />
                 )}
             </div>
         </section>
