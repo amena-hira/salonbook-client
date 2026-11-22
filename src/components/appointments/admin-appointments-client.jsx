@@ -1,7 +1,6 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
-
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   CalendarDays,
@@ -198,11 +197,7 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
                   <div className="flex items-center gap-2">
                     {item.image && (
                       <span className="size-9 shrink-0 overflow-hidden rounded-full bg-cream">
-                        <img
-                          src={item.image}
-                          alt=""
-                          className="size-full object-cover"
-                        />
+                        <Image src={item.image} alt="" fill sizes="36px" className="object-cover" />
                       </span>
                     )}
                     <span className="text-sm font-semibold">

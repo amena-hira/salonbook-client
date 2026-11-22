@@ -1,7 +1,6 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
-
 import { useState } from "react";
+import Image from "next/image";
 import { CalendarDays, CircleX, Clock3, CreditCard, DollarSign, Eye } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 import { cancelMyAppointment } from "@/lib/actions/appointments";
@@ -98,7 +97,7 @@ const MyAppointmentsClient = ({ customerEmail, initialAppointments }) => {
               >
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
-                    {appointment.image && <span className="size-16 shrink-0 overflow-hidden rounded-lg bg-cream"><img src={appointment.image} alt="" className="size-full object-cover" /></span>}
+                    {appointment.image && <span className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-cream"><Image src={appointment.image} alt="" fill sizes="64px" className="object-cover" /></span>}
                     <div>
                       <h2 className="text-sm font-semibold text-charcoal">
                         {appointment.title}

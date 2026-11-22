@@ -1,7 +1,6 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
-
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ChevronDown,
@@ -236,15 +235,8 @@ const ManageServicesClient = ({ initialCategories, initialServices }) => {
               >
                 <td className="px-5 py-3">
                   <div className="flex items-center gap-3">
-                    <span className="size-14 shrink-0 overflow-hidden rounded-lg bg-cream">
-                      <img
-                        src={service.image}
-                        alt=""
-                        // onError={(event) => {
-                        //   event.currentTarget.src = DEFAULT_SERVICE_IMAGE;
-                        // }}
-                        className="size-full object-cover"
-                      />
+                    <span className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-cream">
+                      <Image src={service.image} alt="" fill sizes="56px" className="object-cover" />
                     </span>
                     <span className="min-w-0 truncate text-sm font-semibold text-charcoal">
                       {service.name}

@@ -1,8 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
-
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, CalendarDays, Check, CircleX, Clock3 } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { getMyAppointments } from "@/lib/actions/appointments";
@@ -124,12 +123,8 @@ const CustomerDashboardPage = async () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         {appointment.image && (
-                          <span className="size-14 shrink-0 overflow-hidden rounded-lg bg-cream">
-                            <img
-                              src={appointment.image}
-                              alt=""
-                              className="size-full object-cover"
-                            />
+                          <span className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-cream">
+                            <Image src={appointment.image} alt="" fill sizes="56px" className="object-cover" />
                           </span>
                         )}
                         <div>
@@ -171,11 +166,7 @@ const CustomerDashboardPage = async () => {
           </div>
         </section>
         <section className="relative min-h-96 overflow-hidden rounded-2xl bg-charcoal p-8 text-white">
-          <img
-            src="/images/hero.jpg"
-            alt="Salon interior"
-            className="absolute inset-0 size-full object-cover"
-          />
+          <Image src="/images/hero.jpg" alt="Salon interior" fill sizes="(min-width: 1280px) 32vw, 100vw" className="object-cover" />
           <div className="absolute inset-0 bg-charcoal/60" />
           <div className="relative flex h-full min-h-80 flex-col justify-end">
             <h2 className="max-w-sm font-heading text-3xl font-semibold leading-none">
