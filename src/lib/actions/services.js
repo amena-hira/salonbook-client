@@ -1,3 +1,5 @@
+import { protectedMutation } from "../core/server";
+
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
@@ -24,7 +26,7 @@ export const getServiceById = async(serviceId) =>{
   return res.json();
 }
 
-export const createJob = async (data) => {
+export const createService = async (data) => {
     const api = `${BASE_URL}/services`;
     const res = await protectedMutation(api, "POST", data)
     return res.json()

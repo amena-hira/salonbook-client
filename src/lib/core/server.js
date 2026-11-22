@@ -1,5 +1,8 @@
 export const protectedMutation = async (api, method, data) => {
     // const token = await getToken();
+    console.log(data);
+    console.log(api);
+    console.log(method);
     const res = await fetch(api, {
         method: method,
         headers: {
