@@ -16,7 +16,7 @@ const MyAppointmentsPage = async () => {
     appointments = [];
   }
 
-  return <MyAppointmentsClient initialAppointments={appointments} />;
+  return <MyAppointmentsClient initialAppointments={appointments} customerEmail={session.user.email} />;
 };
 
 export default MyAppointmentsPage;

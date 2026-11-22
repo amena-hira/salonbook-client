@@ -4,33 +4,19 @@
 import { useState } from "react";
 import { CalendarDays, CircleX, Clock3, CreditCard, DollarSign, Eye } from "lucide-react";
 import { toast } from "@/components/ui/toast";
+import { cancelMyAppointment } from "@/lib/actions/appointments";
 
-const toTitleCase = (value) =>
-  value
-    ? `${value}`.charAt(0).toUpperCase() + `${value}`.slice(1).toLowerCase()
-    : "Pending";
-
-const normalizeAppointment = (appointment) => {
-  const service = appointment.service || appointment.serviceId || {};
-  const duration = service.duration || appointment.duration;
-  const time = appointment.timeSlot || appointment.time || "Time pending";
-
-  return {
-    id: appointment._id || appointment.id,
-    title:
-      service.serviceName ||
-      service.name ||
-      appointment.serviceName ||
-      "Salon service",
-    category: service.category || appointment.category || "Service",
-    date: appointment.appointmentDate || appointment.date || "Date pending",
-    time: duration ? `${time} (${duration} mins)` : time,
-    price: service.price,
-    createdAt: appointment.createdAt,
-    status: toTitleCase(appointment.status || appointment.appointmentStatus),
-    image: service.image || appointment.image,
-  };
-};
+const normalizeAppointment = (appointment) => ({
+  id: appointment._id,
+  title: appointment.service.serviceName,
+  category: appointment.service.category,
+  date: appointment.appointmentDate,
+  time: `${appointment.timeSlot} (${appointment.service.duration} mins)`,
+  price: appointment.servicePrice,
+  createdAt: appointment.createdAt,
+  status: appointment.appointmentStatus,
+  image: appointment.service.image,
+});
 
 const statusStyles = {
   Confirmed: "bg-[#e7f6e7] text-[#258235]",
@@ -38,9 +24,10 @@ const statusStyles = {
   Cancelled: "bg-[#fde8e5] text-[#bd3d32]",
 };
 
-const MyAppointmentsClient = ({ initialAppointments }) => {
+const MyAppointmentsClient = ({ customerEmail, initialAppointments }) => {
   const [activeFilter, setActiveFilter] = useState("All");
-  const appointments = initialAppointments.map(normalizeAppointment);
+  const [appointments, setAppointments] = useState(initialAppointments.map(normalizeAppointment));
+  const [cancellingId, setCancellingId] = useState("");
   const filters = ["All", "Pending", "Confirmed", "Cancelled"].map((label) => ({
     label,
     count:
@@ -55,6 +42,19 @@ const MyAppointmentsClient = ({ initialAppointments }) => {
       : appointments.filter(
         (appointment) => appointment.status === activeFilter,
       );
+
+  const cancelAppointment = async (appointment) => {
+    setCancellingId(appointment.id);
+    try {
+      await cancelMyAppointment(appointment.id, customerEmail);
+      setAppointments((items) => items.map((item) => item.id === appointment.id ? { ...item, status: "Cancelled" } : item));
+      toast.add({ title: "Appointment cancelled", description: "Your pending appointment request has been cancelled.", type: "success" });
+    } catch (error) {
+      toast.add({ title: "Unable to cancel appointment", description: error.message || "Please try again.", type: "error" });
+    } finally {
+      setCancellingId("");
+    }
+  };
 
   return (
     <section className="mx-auto w-full max-w-[1440px] px-6 py-10 sm:px-10">
@@ -98,13 +98,7 @@ const MyAppointmentsClient = ({ initialAppointments }) => {
               >
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <span className="size-16 shrink-0 overflow-hidden rounded-lg bg-cream">
-                      <img
-                        src={appointment.image}
-                        alt=""
-                        className="size-full object-cover"
-                      />
-                    </span>
+                    {appointment.image && <span className="size-16 shrink-0 overflow-hidden rounded-lg bg-cream"><img src={appointment.image} alt="" className="size-full object-cover" /></span>}
                     <div>
                       <h2 className="text-sm font-semibold text-charcoal">
                         {appointment.title}
@@ -165,18 +159,12 @@ const MyAppointmentsClient = ({ initialAppointments }) => {
                     {appointment.status === "Pending" && (
                       <button
                         type="button"
-                        onClick={() =>
-                          toast.add({
-                            title: "Appointment cancellation",
-                            description:
-                              "Cancellation will be available when the appointments API is connected.",
-                            type: "info",
-                          })
-                        }
-                        className="inline-flex items-center gap-1.5 rounded-md border border-red-300 px-3 py-2 text-xs font-semibold text-destructive"
+                        disabled={cancellingId === appointment.id}
+                        onClick={() => cancelAppointment(appointment)}
+                        className="inline-flex items-center gap-1.5 rounded-md border border-red-300 px-3 py-2 text-xs font-semibold text-destructive disabled:opacity-60"
                       >
                         <CircleX className="size-3.5" />
-                        Cancel
+                        {cancellingId === appointment.id ? "Cancelling..." : "Cancel"}
                       </button>
                     )}
                     <button

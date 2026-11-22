@@ -11,7 +11,6 @@ export const addNewAppointment = async (data) => {
 };
 
 export const getMyAppointments = async (customerEmail) => {
-  console.log("customer email: ",customerEmail);
   const res = await fetch(`${BASE_URL}/my-appointments/${customerEmail}`, {
     cache: "no-store",
   });
@@ -28,6 +27,16 @@ export const getAppointments = async () => {
     throw new Error("Unable to load appointments");
   }
   return await res.json();
+};
+
+export const cancelMyAppointment = async (appointmentId, email) => {
+  const res = await protectedMutation(
+    `${BASE_URL}/my-appointments/${appointmentId}`,
+    "PATCH",
+    { email },
+  );
+  if (!res.ok) throw new Error("Unable to cancel appointment");
+  return res.json();
 };
 
 export const updateAppointment = async (appointmentId, data) => {
