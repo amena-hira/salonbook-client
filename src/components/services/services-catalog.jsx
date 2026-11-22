@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { Filter, SlidersHorizontal } from "lucide-react";
 import EmptyServices from "@/components/services/empty-services";
 import ServiceCard from "@/components/services/service-card";
-import ServiceFilterPriceRange from "./service-filter-price-range";
-import ServiceFilterDuration from "./service-filter-duration";
-import ServiceFilterSearch from "./service-filter-search";
+import ServiceFilterPriceRange from "./service-filter/service-filter-price-range";
+import ServiceFilterDuration from "./service-filter/service-filter-duration";
+import ServiceFilterSearch from "./service-filter/service-filter-search";
 
 const durationOptions = [
     { label: "Up to 30 min", value: "short" },

@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { getServiceImage } from "@/lib/service-images";
 import { getServiceById } from "@/lib/actions/services";
-import BookAppointmentModal from "@/components/services/book-appointment-modal";
+import BookAppointmentModal from "@/components/services/appointment/book-appointment-modal";
 
 const ServiceDetailsPage = async ({ params }) => {
   const { id } = await params;

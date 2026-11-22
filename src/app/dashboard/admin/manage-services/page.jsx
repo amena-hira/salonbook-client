@@ -1,4 +1,4 @@
-import ManageServicesClient from "@/components/services/manage-services-client";
+import ManageServicesClient from "@/components/services/manage-services/manage-services-client";
 import { getAllServices, getCategories } from "@/lib/actions/services";
 
 const ManageServicesPage = async () => {

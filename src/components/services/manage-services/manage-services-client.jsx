@@ -17,19 +17,9 @@ import {
   getServices,
   updateService,
 } from "@/lib/actions/services";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogMedia,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import DeleteServiceDialog from "@/components/services/manage-services/delete-service-dialog";
 
-// const DEFAULT_SERVICE_IMAGE = "/images/services/brushing.jpg";
+const DEFAULT_SERVICE_IMAGE = "/images/services/brushing.jpg";
 
 const normalizeService = (service) => ({
   ...service,
@@ -324,33 +314,7 @@ const ManageServicesClient = ({ initialCategories, initialServices }) => {
           </p>
         )}
       </div>
-      <AlertDialog
-        open={Boolean(serviceToDelete)}
-        onOpenChange={(open) => !open && setServiceToDelete(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogMedia className="bg-red-100 text-destructive">
-              <Trash2 />
-            </AlertDialogMedia>
-            <AlertDialogTitle>Delete service?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete {serviceToDelete?.name}? This
-              action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={removeService}
-              disabled={isDeleting}
-              className="bg-destructive text-white hover:bg-destructive/90"
-            >
-              {isDeleting ? "Deleting..." : "Delete Service"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteServiceDialog service={serviceToDelete} isDeleting={isDeleting} onOpenChange={(open) => !open && setServiceToDelete(null)} onConfirm={removeService} />
     </section>
   );
 };
