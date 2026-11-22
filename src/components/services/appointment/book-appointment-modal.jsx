@@ -73,8 +73,8 @@ const BookAppointmentModal = ({ service, className }) => {
       timeSlot: time,
       message,
       servicePrice: service?.price,
-      paymentStatus: "unpaid",
-      status: "pending",
+      paymentStatus: "Unpaid",
+      status: "Pending",
       createdAt: new Date().toISOString(),
     };
 

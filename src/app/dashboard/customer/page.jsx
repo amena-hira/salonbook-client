@@ -12,9 +12,6 @@ const statusStyles = {
   Cancelled: "bg-[#fde8e5] text-[#bd3d32]",
 };
 
-const formatStatus = (status) =>
-  `${status}`.charAt(0).toUpperCase() + `${status}`.slice(1).toLowerCase();
-
 const CustomerDashboardPage = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) redirect("/sign-in?redirectTo=/dashboard/customer");
@@ -31,7 +28,7 @@ const CustomerDashboardPage = async () => {
       category: appointment.service.category,
       date: appointment.appointmentDate,
       time: `${appointment.timeSlot} (${appointment.service.duration} mins)`,
-      status: formatStatus(appointment.status),
+      status: appointment.status,
       image: appointment.service.image,
       createdAt: appointment.createdAt,
     }));
