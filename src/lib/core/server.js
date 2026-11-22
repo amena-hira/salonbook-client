@@ -11,8 +11,8 @@ export const protectedMutation = async (api, method, data) => {
         },
         body: data ? JSON.stringify(data) : null
     })
-    if (res.status === 401 || res.status === 403) {
-        redirect("/unauthorized");
-    }
+    // if (res.status === 401 || res.status === 403) {
+    //     redirect("/unauthorized");
+    // }
     return res;
 }

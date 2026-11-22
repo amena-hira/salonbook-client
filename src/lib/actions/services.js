@@ -26,7 +26,7 @@ export const getServiceById = async(serviceId) =>{
   return res.json();
 }
 
-export const createService = async (data) => {
+export const addNewService = async (data) => {
     const api = `${BASE_URL}/services`;
     const res = await protectedMutation(api, "POST", data)
     return res.json()

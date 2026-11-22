@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ServiceForm from "@/components/services/service-form";
 import { toast } from "@/components/ui/toast";
+import { addNewService } from "@/lib/actions/services";
 
 const AddServicePage = () => {
   const router = useRouter();
@@ -24,26 +25,13 @@ const AddServicePage = () => {
       if (!uploadResponse.ok || !upload.success)
         throw new Error("Unable to upload image.");
 
-      const serviceData= {
+      const serviceData = {
         ...service,
-        image: upload.data.url
-      }
+        image: upload.data.url,
+      };
 
-      console.log("service data:", serviceData);
-
-      const response = await createService(serviceData);
-
-      // const response = await fetch(
-      //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/services`,
-      //   {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify({ ...service, image: upload.data.url }),
-      //   },
-      // );
-
-      console.log("response: ",response);
-      if (!response.ok) throw new Error("Unable to add service.");
+      const response = await addNewService(serviceData);
+      if (!response.acknowledged) throw new Error("Unable to add service.");
       toast.add({
         title: "Service added",
         description: "The new service is available in Manage Services.",
