@@ -19,6 +19,7 @@ import { signOut } from "@/lib/auth-client";
 
 const UserMenu = ({ user }) => {
   const router = useRouter();
+  const dashboardPath = user?.role === "admin" ? "/dashboard/admin" : "/dashboard/customer";
   const initials = user?.name
     ?.split(" ")
     .map((name) => name[0])
@@ -59,7 +60,10 @@ const UserMenu = ({ user }) => {
       </div>
       <DropdownMenuSeparator className="mx-1 my-0 bg-[#e5e2dd]" />
       <div className="py-2">
-        <DropdownMenuItem className="cursor-pointer gap-4 rounded-lg px-3 py-2.5 text-base font-medium">
+        <DropdownMenuItem
+          onClick={() => router.push(dashboardPath)}
+          className="cursor-pointer gap-4 rounded-lg px-3 py-2.5 text-base font-medium"
+        >
           <LayoutDashboard className="size-5" />
           Dashboard
         </DropdownMenuItem>

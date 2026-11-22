@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   CalendarDays,
-  Flower2,
+  LayoutGrid,
   Grid2X2,
   Home,
   LogOut,
@@ -28,9 +28,10 @@ import {
 } from "@/components/ui/sidebar";
 
 const customerLinks = [
-  { label: "Overview", href: "/dashboard/customer", icon: Home },
-  { label: "My Appointments", href: "/dashboard/customer/appointments", icon: CalendarDays },
-  { label: "My Profile", href: "/dashboard/customer/profile", icon: UserRound },
+  { label: "Home", href: "/", icon: Home },
+  { label: "Overview", href: "/dashboard/customer", icon: LayoutGrid },
+  { label: "My Appointments", href: "/dashboard/customer/my-appointments", icon: CalendarDays },
+  { label: "My Profile", href: "/dashboard/customer/my-profile", icon: UserRound },
 ];
 
 const adminLinks = [
@@ -98,10 +99,10 @@ const DashboardSidebar = () => {
           <button
             type="button"
             onClick={handleSignOut}
-            className="flex h-12 w-full items-center gap-4 rounded-lg px-3 text-left text-base font-medium text-white transition-colors hover:bg-white/10"
+            className="flex h-12 w-full items-center gap-4 rounded-lg px-3 text-left text-base font-medium text-red-300 transition-colors hover:bg-red-300/10"
           >
             <LogOut className="size-6" strokeWidth={1.8} aria-hidden="true" />
-            Log Out
+            Sign Out
           </button>
         </div>
       </SidebarFooter>
