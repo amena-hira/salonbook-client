@@ -67,7 +67,9 @@ const UserMenu = ({ user }) => {
           <LayoutDashboard className="size-5" />
           Dashboard
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer gap-4 rounded-lg px-3 py-2.5 text-base font-medium">
+        <DropdownMenuItem
+            onClick={() => router.push("/dashboard/my-profile")}
+         className="cursor-pointer gap-4 rounded-lg px-3 py-2.5 text-base font-medium">
           <UserRound className="size-5" />
           My Profile
         </DropdownMenuItem>
