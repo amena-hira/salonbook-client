@@ -23,3 +23,9 @@ export const getServiceById = async(serviceId) =>{
   const res = await fetch(`${BASE_URL}/services/${serviceId}`);
   return res.json();
 }
+
+export const createJob = async (data) => {
+    const api = `${BASE_URL}/services`;
+    const res = await protectedMutation(api, "POST", data)
+    return res.json()
+}
