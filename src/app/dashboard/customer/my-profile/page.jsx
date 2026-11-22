@@ -69,49 +69,49 @@ const MyProfilePage = () => {
   ];
 
   return (
-    <section className="mx-auto w-full max-w-[1440px] px-6 py-10 sm:px-10">
+    <section className="mx-auto w-full max-w-[1200px] p-5 sm:px-7">
       <div>
-        <h2 className="font-heading text-3xl font-semibold tracking-tight text-charcoal sm:text-4xl">My Profile</h2>
-        <p className="mt-2 text-base text-ash">View and update your personal information.</p>
+        <h2 className="font-heading text-2xl font-semibold tracking-tight text-charcoal sm:text-3xl">My Profile</h2>
+        <p className="mt-1 text-sm text-ash">View and update your personal information.</p>
       </div>
 
-      <div className="mt-9 grid items-start gap-6 lg:grid-cols-[330px_minmax(0,1fr)]">
-        <aside className="flex h-[386px] w-full max-w-[330px] self-start justify-self-start flex-col items-center justify-center rounded-2xl bg-[#f5efec] p-8 text-center">
+      <div className="mt-6 grid items-start gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <aside className="flex h-[330px] w-full max-w-[280px] self-start justify-self-start flex-col items-center justify-center rounded-xl bg-[#f5efec] p-6 text-center">
           <div className="relative">
-            <Avatar className="size-36 border-0">
+            <Avatar className="size-28 border-0">
               {user?.image && <AvatarImage src={user.image} alt={user.name || "User profile"} />}
-              <AvatarFallback className="bg-[#d8cec1] text-4xl font-semibold text-charcoal">{initials}</AvatarFallback>
+              <AvatarFallback className="bg-[#d8cec1] text-3xl font-semibold text-charcoal">{initials}</AvatarFallback>
             </Avatar>
-            <button type="button" onClick={() => toast.add({ title: "Profile photo", description: "Photo updates will be available soon.", type: "info" })} aria-label="Change profile photo" className="absolute bottom-0 right-0 grid size-10 place-items-center rounded-full border-4 border-cream bg-white text-charcoal shadow-sm hover:bg-background">
-              <Camera className="size-5" aria-hidden="true" />
+            <button type="button" onClick={() => toast.add({ title: "Profile photo", description: "Photo updates will be available soon.", type: "info" })} aria-label="Change profile photo" className="absolute bottom-0 right-0 grid size-8 place-items-center rounded-full border-2 border-cream bg-white text-charcoal shadow-sm hover:bg-background">
+              <Camera className="size-4" aria-hidden="true" />
             </button>
           </div>
-          <h3 className="mt-6 font-heading text-3xl font-semibold text-charcoal">{user?.name || "SalonBook User"}</h3>
-          <p className="mt-2 text-base text-ash">{user?.email}</p>
+          <h3 className="mt-4 font-heading text-2xl font-semibold text-charcoal">{user?.name || "SalonBook User"}</h3>
+          <p className="mt-1 text-sm text-ash">{user?.email}</p>
         </aside>
 
-        <form key={user?.id || "profile"} onSubmit={handleSubmit} className="flex rounded-2xl border border-border bg-card p-7 sm:p-9 xl:min-h-[846px] xl:flex-col">
-          <div className="flex items-center gap-3"><UserRound className="size-7 text-charcoal" aria-hidden="true" /><h3 className="text-2xl font-semibold text-charcoal">Profile Information</h3></div>
-          <div className="mt-7 grid gap-6 md:grid-cols-2 md:gap-x-8">
-            <label className="block md:col-span-2"><span className="mb-2 block text-base font-semibold text-charcoal">Full Name</span><input name="name" defaultValue={user?.name || ""} required className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-charcoal outline-none focus:border-charcoal" /></label>
-            <label className="block"><span className="mb-2 block text-base font-semibold text-charcoal">Email Address</span><input value={user?.email || ""} readOnly className="h-14 w-full cursor-not-allowed rounded-xl border border-border bg-muted px-4 text-base text-ash outline-none" /></label>
-            <label className="block"><span className="mb-2 block text-base font-semibold text-charcoal">Phone Number</span><input name="phone" defaultValue={user?.phone || ""} placeholder="Enter your phone number" className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-charcoal outline-none placeholder:text-ash focus:border-charcoal" /></label>
+        <form key={user?.id || "profile"} onSubmit={handleSubmit} className="flex rounded-xl border border-border bg-card p-5 sm:p-6 xl:min-h-[690px] xl:flex-col">
+          <div className="flex items-center gap-2"><UserRound className="size-5 text-charcoal" aria-hidden="true" /><h3 className="text-xl font-semibold text-charcoal">Profile Information</h3></div>
+          <div className="mt-5 grid gap-4 md:grid-cols-2 md:gap-x-5">
+            <label className="block md:col-span-2"><span className="mb-1.5 block text-sm font-semibold text-charcoal">Full Name</span><input name="name" defaultValue={user?.name || ""} required className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm text-charcoal outline-none focus:border-charcoal" /></label>
+            <label className="block"><span className="mb-1.5 block text-sm font-semibold text-charcoal">Email Address</span><input value={user?.email || ""} readOnly className="h-11 w-full cursor-not-allowed rounded-lg border border-border bg-muted px-3 text-sm text-ash outline-none" /></label>
+            <label className="block"><span className="mb-1.5 block text-sm font-semibold text-charcoal">Phone Number</span><input name="phone" defaultValue={user?.phone || ""} placeholder="Enter your phone number" className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm text-charcoal outline-none placeholder:text-ash focus:border-charcoal" /></label>
           </div>
 
-          <div className="my-9 border-t border-border" />
-          <div className="flex items-center gap-3"><LockKeyhole className="size-7 text-charcoal" aria-hidden="true" /><h3 className="text-2xl font-semibold text-charcoal">Change Password</h3></div>
-          <div className="mt-7 space-y-5">
+          <div className="my-6 border-t border-border" />
+          <div className="flex items-center gap-2"><LockKeyhole className="size-5 text-charcoal" aria-hidden="true" /><h3 className="text-xl font-semibold text-charcoal">Change Password</h3></div>
+          <div className="mt-5 space-y-4">
             {passwordFields.map((field) => (
               <label key={field.name} className="block">
-                <span className="mb-2 block text-base font-semibold text-charcoal">{field.label}</span>
+                <span className="mb-1.5 block text-sm font-semibold text-charcoal">{field.label}</span>
                 <span className="relative block">
-                  <input type={field.visible ? "text" : "password"} name={field.name} autoComplete={field.name === "currentPassword" ? "current-password" : "new-password"} placeholder={field.placeholder} className="h-14 w-full rounded-xl border border-border bg-background px-4 pr-12 text-base text-charcoal outline-none placeholder:text-ash focus:border-charcoal" />
-                  <button type="button" onClick={field.toggle} aria-label={`Toggle ${field.label} visibility`} className="absolute right-4 top-1/2 -translate-y-1/2 text-ash hover:text-charcoal">{field.visible ? <EyeOff className="size-5" aria-hidden="true" /> : <Eye className="size-5" aria-hidden="true" />}</button>
+                  <input type={field.visible ? "text" : "password"} name={field.name} autoComplete={field.name === "currentPassword" ? "current-password" : "new-password"} placeholder={field.placeholder} className="h-11 w-full rounded-lg border border-border bg-background px-3 pr-10 text-sm text-charcoal outline-none placeholder:text-ash focus:border-charcoal" />
+                  <button type="button" onClick={field.toggle} aria-label={`Toggle ${field.label} visibility`} className="absolute right-3 top-1/2 -translate-y-1/2 text-ash hover:text-charcoal">{field.visible ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}</button>
                 </span>
               </label>
             ))}
           </div>
-          <div className="mt-9 flex justify-end gap-4 xl:mt-auto xl:pt-9"><button type="reset" className="rounded-xl border border-border px-6 py-3 text-sm font-semibold text-charcoal hover:bg-cream">Cancel</button><button type="submit" disabled={isSaving} className="rounded-xl bg-[#3c2a1d] px-6 py-3 text-sm font-semibold text-white hover:bg-charcoal disabled:cursor-not-allowed disabled:opacity-60">{isSaving ? "Updating..." : "Update Profile"}</button></div>
+          <div className="mt-6 flex justify-end gap-3 xl:mt-auto xl:pt-6"><button type="reset" className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold text-charcoal hover:bg-cream">Cancel</button><button type="submit" disabled={isSaving} className="rounded-lg bg-[#3c2a1d] px-5 py-2.5 text-sm font-semibold text-white hover:bg-charcoal disabled:cursor-not-allowed disabled:opacity-60">{isSaving ? "Updating..." : "Update Profile"}</button></div>
         </form>
       </div>
     </section>

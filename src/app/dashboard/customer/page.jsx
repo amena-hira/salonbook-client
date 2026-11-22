@@ -28,7 +28,7 @@ const CustomerDashboardPage = () => {
   const user = session?.user
 
   return (
-    <section className="mx-auto w-full max-w-[1440px] px-6 py-10 sm:px-10">
+    <section className="mx-auto w-full max-w-[1440px] px-6 py-6 sm:px-10">
       <div>
         <h2 className="font-heading text-3xl font-semibold tracking-tight text-charcoal sm:text-4xl">Welcome back, {user?.name || "there"}! </h2>
         <p className="mt-2 text-base text-ash">Here&apos;s a quick overview of your salon appointments.</p>

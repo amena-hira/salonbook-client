@@ -37,23 +37,23 @@ const DashboardTopbar = () => {
   };
 
   return (
-    <header className="flex h-24 items-center justify-between border-b border-border px-6 sm:px-10">
-      <div className="flex items-center gap-5">
-        <SidebarTrigger className="size-12 rounded-md border border-border text-charcoal hover:bg-cream hover:text-charcoal" />
-        <h1 className="font-heading text-2xl font-semibold text-charcoal sm:text-3xl">{title}</h1>
+    <header className="flex h-16 items-center justify-between border-b border-border px-4 sm:px-6">
+      <div className="flex items-center gap-3">
+        <SidebarTrigger className="size-9 rounded-md border border-border text-charcoal hover:bg-cream hover:text-charcoal" />
+        <h1 className="font-heading text-xl font-semibold text-charcoal sm:text-2xl">{title}</h1>
       </div>
-      <div className="flex items-center gap-4 sm:gap-6">
-        <button type="button" aria-label="Notifications" className="relative grid size-10 place-items-center rounded-full text-charcoal transition-colors hover:bg-cream">
-          <Bell className="size-6" aria-hidden="true" />
-          <span className="absolute right-1 top-1 size-2.5 rounded-full bg-red-500 ring-2 ring-background" />
+      <div className="flex items-center gap-3 sm:gap-4">
+        <button type="button" aria-label="Notifications" className="relative grid size-8 place-items-center rounded-full text-charcoal transition-colors hover:bg-cream">
+          <Bell className="size-5" aria-hidden="true" />
+          <span className="absolute right-0.5 top-0.5 size-2 rounded-full bg-red-500 ring-2 ring-background" />
         </button>
         <DropdownMenu>
           <DropdownMenuTrigger aria-label="Open user menu" className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-charcoal">
-            <Avatar className="size-12 border border-border">
+            <Avatar className="size-9 border border-border">
               {user?.image && <AvatarImage src={user.image} alt={user.name || "User profile"} />}
               <AvatarFallback className="bg-cream font-semibold text-charcoal">{initials}</AvatarFallback>
             </Avatar>
-            <ChevronDown className="hidden size-5 text-charcoal sm:block" aria-hidden="true" />
+            <ChevronDown className="hidden size-4 text-charcoal sm:block" aria-hidden="true" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-64 rounded-xl bg-white p-3 text-charcoal shadow-xl">
             <div className="px-3 py-2">
