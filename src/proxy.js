@@ -7,14 +7,29 @@ export async function proxy(request) {
     headers: request.headers,
   });
   const user = session?.user;
+
   if (!user) {
     const loginUrl = new URL("/sign-in", request.url);
     loginUrl.searchParams.set(
-      "callbackURL",
+      "redirectTo",
       `${request.nextUrl.pathname}${request.nextUrl.search}`,
     );
     return NextResponse.redirect(loginUrl);
   }
+
+  if (user.banned) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  const { pathname } = request.nextUrl;
+  if (pathname.startsWith("/dashboard/admin") && user.role !== "admin") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if (pathname.startsWith("/dashboard/customer") && user.role !== "customer") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   return NextResponse.next();
 }
 
