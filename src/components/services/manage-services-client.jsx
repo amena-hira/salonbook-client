@@ -12,9 +12,8 @@ import {
   Trash2,
 } from "lucide-react";
 import { toast } from "@/components/ui/toast";
-import { updateService } from "@/lib/actions/services";
+import { getServices, updateService } from "@/lib/actions/services";
 
-const DEFAULT_SERVICE_IMAGE = "/images/services/brushing.jpg";
 
 const normalizeService = (service) => ({
   ...service,
@@ -26,7 +25,7 @@ const normalizeService = (service) => ({
     : (service.isActive ?? true),
 });
 
-const ManageServicesClient = ({ initialServices }) => {
+const ManageServicesClient = ({ initialCategories, initialServices }) => {
   const [services, setServices] = useState(
     initialServices.map(normalizeService),
   );
@@ -36,15 +35,40 @@ const ManageServicesClient = ({ initialServices }) => {
   const [updatingId, setUpdatingId] = useState("");
   const categories = [
     "All Categories",
-    ...new Set(services.map((service) => service.category)),
+    ...initialCategories
+      .map((item) => typeof item === "string" ? item : item.name)
+      .filter(Boolean),
   ];
-  const visibleServices = services.filter(
-    (service) =>
-      service.name.toLowerCase().includes(search.toLowerCase()) &&
-      (category === "All Categories" || service.category === category) &&
-      (status === "All Statuses" ||
-        (status === "Active" ? service.active : !service.active)),
-  );
+
+  const loadServices = async (nextFilters) => {
+    const query = new URLSearchParams();
+    if (nextFilters.category !== "All Categories") query.set("category", nextFilters.category);
+    if (nextFilters.search.trim()) query.set("search", nextFilters.search.trim());
+    if (nextFilters.status !== "All Statuses") query.set("status", nextFilters.status.toLowerCase());
+
+    try {
+      const result = await getServices(query.toString());
+      const items = Array.isArray(result) ? result : (result.services || result.data || []);
+      setServices(items.map(normalizeService));
+    } catch (error) {
+      toast.add({ title: "Unable to load services", description: error.message || "Please try again.", type: "error" });
+    }
+  };
+
+  const handleSearch = (value) => {
+    setSearch(value);
+    loadServices({ category, search: value, status });
+  };
+
+  const handleCategory = (value) => {
+    setCategory(value);
+    loadServices({ category: value, search, status });
+  };
+
+  const handleStatus = (value) => {
+    setStatus(value);
+    loadServices({ category, search, status: value });
+  };
 
   const toggleService = async (service) => {
     const nextStatus = service.active ? "inactive" : "active";
@@ -104,7 +128,7 @@ const ManageServicesClient = ({ initialServices }) => {
           <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-ash" />
           <input
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) => handleSearch(event.target.value)}
             placeholder="Search services by name..."
             className="h-12 w-full rounded-lg border border-border bg-card px-12 text-sm text-charcoal outline-none placeholder:text-ash focus:border-charcoal"
           />
@@ -112,7 +136,7 @@ const ManageServicesClient = ({ initialServices }) => {
         <label className="relative">
           <select
             value={category}
-            onChange={(event) => setCategory(event.target.value)}
+            onChange={(event) => handleCategory(event.target.value)}
             className="h-12 w-full appearance-none rounded-lg border border-border bg-card px-4 pr-10 text-sm font-medium text-charcoal outline-none focus:border-charcoal"
           >
             {categories.map((item) => (
@@ -124,7 +148,7 @@ const ManageServicesClient = ({ initialServices }) => {
         <label className="relative">
           <select
             value={status}
-            onChange={(event) => setStatus(event.target.value)}
+            onChange={(event) => handleStatus(event.target.value)}
             className="h-12 w-full appearance-none rounded-lg border border-border bg-card px-4 pr-10 text-sm font-medium text-charcoal outline-none focus:border-charcoal"
           >
             <option>All Statuses</option>
@@ -166,7 +190,7 @@ const ManageServicesClient = ({ initialServices }) => {
             </tr>
           </thead>
           <tbody>
-            {visibleServices.map((service) => (
+            {services.map((service) => (
               <tr
                 key={service.id}
                 className="border-b border-border last:border-0"
@@ -177,9 +201,6 @@ const ManageServicesClient = ({ initialServices }) => {
                       <img
                         src={service.image}
                         alt=""
-                        onError={(event) => {
-                          event.currentTarget.src = DEFAULT_SERVICE_IMAGE;
-                        }}
                         className="size-full object-cover"
                       />
                     </span>
