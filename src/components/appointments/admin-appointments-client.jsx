@@ -13,38 +13,21 @@ import {
 } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 
-const DEFAULT_IMAGE = "/images/services/brushing.jpg";
-const titleCase = (value) =>
-  value
-    ? `${value}`.charAt(0).toUpperCase() + `${value}`.slice(1).toLowerCase()
-    : "Pending";
-
-const normalizeAppointment = (appointment) => {
-  const customer =
-    appointment.customer || appointment.customerId || appointment.user || {};
-  const service = appointment.service || appointment.serviceId || {};
-
-  return {
-    id: appointment._id || appointment.id,
-    customer: customer.name || appointment.customerName || "Customer",
-    email: customer.email || appointment.customerEmail || "",
-    service:
-      service.serviceName ||
-      service.name ||
-      appointment.serviceName ||
-      "Salon service",
-    price: service.price,
-    category: service.category || appointment.category || "Service",
-    date: appointment.appointmentDate || appointment.date || "Date pending",
-    time: appointment.timeSlot || appointment.time || "Time pending",
-    duration: service.duration || appointment.duration || "—",
-    status: titleCase(appointment.status || appointment.appointmentStatus),
-    payment: titleCase(appointment.paymentStatus || appointment.payment),
-    image:
-      customer.image || service.image || appointment.image || DEFAULT_IMAGE,
-    createdAt: appointment.createdAt
-  };
-};
+const normalizeAppointment = (appointment) => ({
+  id: appointment._id,
+  customer: appointment.customer.name,
+  email: appointment.customerEmail,
+  service: appointment.service.serviceName,
+  price: appointment.servicePrice,
+  category: appointment.service.category,
+  date: appointment.appointmentDate,
+  time: appointment.timeSlot,
+  duration: appointment.service.duration,
+  status: appointment.appointmentStatus,
+  payment: appointment.paymentStatus,
+  image: appointment.service.image,
+  createdAt: appointment.createdAt,
+});
 
 const tone = {
   Pending: "bg-amber-100 text-amber-700",
@@ -178,8 +161,8 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
           <thead className="bg-cream/50 text-xs">
             <tr>
               {[
-                "Customer",
                 "Service",
+                "Customer",
                 "Price",
                 "Appointment Date & Time",
                 "Duration",
@@ -199,27 +182,18 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
               <tr key={item.id} className="border-t border-border">
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-2">
-                    <span className="size-9 shrink-0 overflow-hidden rounded-full bg-cream">
-                      <img
-                        src={item.image}
-                        alt=""
-                        onError={(event) => {
-                          event.currentTarget.src = DEFAULT_IMAGE;
-                        }}
-                        className="size-full object-cover"
-                      />
-                    </span>
-                    <span>
-                      <b className="block text-sm">{item.customer}</b>
-                      <small className="text-xs text-ash">{item.email}</small>
+                    {item.image && <span className="size-9 shrink-0 overflow-hidden rounded-full bg-cream"><img src={item.image} alt="" className="size-full object-cover" /></span>}
+                    <span className="text-sm font-semibold">
+                      {item.service}
                     </span>
                   </div>
                 </td>
-                <td className="px-4 py-4 text-sm font-semibold">
-                  {item.service}
+                <td className="px-4 py-4">
+                  <b className="block text-sm">{item.customer}</b>
+                  <small className="text-xs text-ash">{item.email}</small>
                 </td>
                 <td className="px-4 py-4 text-xs">
-                  {item.price}
+                  ${item.price}
                 </td>
                 <td className="px-4 py-4 text-xs text-ash">
                   {item.date}
