@@ -10,7 +10,6 @@ import {
   Layers3,
   Tag,
 } from "lucide-react";
-import { getServiceImage } from "@/lib/service-images";
 import { getServiceById } from "@/lib/actions/services";
 import BookAppointmentModal from "@/components/services/appointment/book-appointment-modal";
 
@@ -26,7 +25,6 @@ const ServiceDetailsPage = async ({ params }) => {
 
   if (!service) notFound();
 
-  const image = getServiceImage(service);
   const highlights = [
     "Personalized consultation",
     `Professional ${service.category.toLowerCase()} service`,
@@ -74,7 +72,7 @@ const ServiceDetailsPage = async ({ params }) => {
 
             <div className="relative mt-7 aspect-[16/9] overflow-hidden rounded-2xl bg-muted sm:aspect-[16/8.5]">
               <Image
-                src={image}
+                src={service.image}
                 alt={service.serviceName}
                 fill
                 priority

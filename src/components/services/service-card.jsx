@@ -1,14 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock3 } from "lucide-react";
-import { getServiceImage } from "@/lib/service-images";
 
 const ServiceCard = ({ service }) => {
     return (
         <article className="group overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
             <div className="relative aspect-[2.35/1] overflow-hidden">
                 <Image
-                    src={getServiceImage(service)}
+                    src={service.image}
                     alt={service.serviceName}
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
