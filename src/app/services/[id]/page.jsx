@@ -2,127 +2,101 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-    CalendarDays,
-    CheckCircle2,
-    ChevronRight,
-    Clock3,
-    Heart,
-    Home,
-    Layers3,
-    Tag,
+  ArrowLeft,
+  BadgeCheck,
+  Check,
+  ChevronRight,
+  Clock3,
+  Layers3,
+  Tag,
 } from "lucide-react";
 import { getServiceImage } from "@/lib/service-images";
-import { getServiceById, getServices } from "@/lib/actions/services";
+import { getServiceById } from "@/lib/actions/services";
+import BookAppointmentModal from "@/components/services/book-appointment-modal";
 
 const ServiceDetailsPage = async ({ params }) => {
-    const { id } = await params;
-    let service = {};
+  const { id } = await params;
+  let service = {};
 
-    try {
-        service = await getServiceById(id);
-    } catch {
-        notFound();
-    }
+  try {
+    service = await getServiceById(id);
+  } catch {
+    notFound();
+  }
 
+  if (!service) notFound();
 
-    if (!service) notFound();
+  const image = getServiceImage(service);
+  const highlights = [
+    "Personalized consultation",
+    `Professional ${service.category.toLowerCase()} service`,
+    "Premium products and expert care",
+    `A relaxing ${service.duration}-minute appointment`,
+  ];
 
-    const highlights = [
-        "Personalized consultation",
-        `Professional ${service.category.toLowerCase()} service`,
-        "Premium products and expert care",
-        `A relaxing ${service.duration}-minute appointment`,
-    ];
+  return (
+    <main className="bg-background pb-16 pt-24 sm:pb-20 sm:pt-28">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-ash">
+          <Link href="/services" className="inline-flex items-center gap-2 hover:text-charcoal">
+            <ArrowLeft className="size-4" aria-hidden="true" />
+            Services
+          </Link>
+          <ChevronRight className="size-4 text-ash/60" aria-hidden="true" />
+          <span className="font-semibold text-charcoal">Service Details</span>
+        </nav>
 
-    return (
-        <main className="bg-background pt-24 pb-16 sm:pt-28 sm:pb-20">
-            <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-12">
-                <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-sm text-ash">
-                    <Link href="/" className="inline-flex items-center gap-2 hover:text-charcoal">
-                        <Home className="size-4" aria-hidden="true" />
-                        Home
-                    </Link>
-                    <ChevronRight className="size-4" aria-hidden="true" />
-                    <Link href="/services" className="hover:text-charcoal">Browse Services</Link>
-                    <ChevronRight className="size-4" aria-hidden="true" />
-                    <span className="text-charcoal">Service Details</span>
-                </nav>
+        <div className="mt-8 grid items-start gap-8 xl:grid-cols-[minmax(0,1.65fr)_minmax(330px,0.85fr)] xl:gap-12">
+          <div>
+            <h1 className="font-heading text-4xl font-semibold tracking-tight text-charcoal sm:text-5xl">
+              {service.serviceName}
+            </h1>
 
-                <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14">
-                    <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-muted">
-                        <Image
-                            src={getServiceImage(service)}
-                            alt={service.serviceName}
-                            fill
-                            priority
-                            sizes="(min-width: 1024px) 52vw, 100vw"
-                            className="object-cover"
-                        />
-                        <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-charcoal shadow-sm">
-                            <span className="size-2.5 rounded-full bg-green-500" />
-                            Active
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col">
-                        <span className="w-fit rounded-md bg-cream px-3 py-1.5 text-sm font-semibold text-charcoal">
-                            {service.category}
-                        </span>
-                        <h1 className="mt-5 font-heading text-4xl leading-tight font-semibold tracking-tight text-charcoal sm:text-5xl">
-                            {service.serviceName}
-                        </h1>
-                        <p className="mt-5 text-base leading-7 text-ash sm:text-lg">
-                            {service.description}
-                        </p>
-
-                        <div className="mt-7 grid divide-y divide-border border-y border-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-                            <div className="py-4 sm:px-4 sm:first:pl-0">
-                                <Layers3 className="size-6 text-[#b89462]" aria-hidden="true" />
-                                <p className="mt-2 text-sm text-ash">Category</p>
-                                <p className="mt-1 font-semibold text-charcoal">{service.category}</p>
-                            </div>
-                            <div className="py-4 sm:px-4">
-                                <Clock3 className="size-6 text-[#b89462]" aria-hidden="true" />
-                                <p className="mt-2 text-sm text-ash">Estimated Duration</p>
-                                <p className="mt-1 font-semibold text-charcoal">{service.duration} minutes</p>
-                            </div>
-                            <div className="py-4 sm:px-4 sm:last:pr-0">
-                                <Tag className="size-6 text-[#b89462]" aria-hidden="true" />
-                                <p className="mt-2 text-sm text-ash">Price</p>
-                                <p className="mt-1 font-semibold text-charcoal">${service.price}</p>
-                            </div>
-                        </div>
-
-                        <div className="mt-7">
-                            <h2 className="font-heading text-2xl font-semibold text-charcoal">Service Highlights</h2>
-                            <ul className="mt-4 space-y-3">
-                                {highlights.map((highlight) => (
-                                    <li key={highlight} className="flex items-center gap-3 text-sm text-charcoal sm:text-base">
-                                        <CheckCircle2 className="size-5 shrink-0 text-[#b89462]" aria-hidden="true" />
-                                        {highlight}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <div className="mt-9 grid gap-3 sm:grid-cols-[1fr_auto]">
-                            <Link
-                                href={`/book-appointment?service=${service._id}`}
-                                className="inline-flex h-14 items-center justify-center gap-3 rounded-md bg-charcoal px-6 text-base font-semibold text-white transition-colors hover:bg-charcoal/85"
-                            >
-                                <CalendarDays className="size-5" aria-hidden="true" />
-                                Book Appointment
-                            </Link>
-                            <button type="button" className="inline-flex h-14 items-center justify-center gap-3 rounded-md border border-charcoal/40 px-6 text-sm font-semibold text-charcoal transition-colors hover:bg-cream">
-                                <Heart className="size-5" aria-hidden="true" />
-                                Add to Favorites
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div className="mt-4 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm font-semibold text-charcoal sm:text-base">
+              <span className="inline-flex items-center gap-2"><Clock3 className="size-5" />{service.duration} minutes</span>
+              <span className="inline-flex items-center gap-2"><Tag className="size-5" />${service.price}</span>
+              <span className="inline-flex items-center gap-2 rounded-full bg-green-100 px-3 py-1.5 text-sm text-green-700"><span className="size-2 rounded-full bg-green-600" />Active</span>
             </div>
-        </main>
-    );
+
+            <div className="relative mt-7 aspect-[16/9] overflow-hidden rounded-2xl bg-muted sm:aspect-[16/8.5]">
+              <Image src={image} alt={service.serviceName} fill priority sizes="(min-width: 1280px) 720px, (min-width: 640px) 90vw, 100vw" className="object-cover" />
+            </div>
+
+            <section className="mt-7 max-w-3xl">
+              <h2 className="font-heading text-2xl font-semibold text-charcoal">Description</h2>
+              <p className="mt-2 text-sm leading-6 text-ash sm:text-base sm:leading-7">{service.description}</p>
+            </section>
+
+            <section className="mt-7">
+              <h2 className="font-heading text-2xl font-semibold text-charcoal">Service Highlights</h2>
+              <ul className="mt-3 space-y-2">
+                {highlights.map((highlight) => (
+                  <li key={highlight} className="flex items-center gap-3 text-sm text-charcoal sm:text-base">
+                    <Check className="size-5 shrink-0 text-[#684521]" strokeWidth={2.5} aria-hidden="true" />
+                    {highlight}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+
+          <aside className="rounded-2xl border border-border bg-card p-6 shadow-[0_10px_30px_rgba(60,42,29,0.08)]">
+            <h2 className="flex items-center gap-3 font-heading text-2xl font-semibold text-charcoal">
+              <BadgeCheck className="size-7 text-[#684521]" aria-hidden="true" />
+              Service Information
+            </h2>
+            <div className="mt-5 border-y border-border">
+              <div className="flex items-center justify-between gap-4 border-b border-border py-4 text-sm"><span className="flex items-center gap-3 font-medium"><Layers3 className="size-5 text-[#684521]" />Category</span><b className="text-right">{service.category}</b></div>
+              <div className="flex items-center justify-between gap-4 border-b border-border py-4 text-sm"><span className="flex items-center gap-3 font-medium"><Clock3 className="size-5 text-[#684521]" />Duration</span><b>{service.duration} minutes</b></div>
+              <div className="flex items-center justify-between gap-4 border-b border-border py-4 text-sm"><span className="flex items-center gap-3 font-medium"><Tag className="size-5 text-[#684521]" />Price</span><b>${service.price}</b></div>
+              <div className="flex items-center justify-between gap-4 py-4 text-sm"><span className="flex items-center gap-3 font-medium"><BadgeCheck className="size-5 text-[#684521]" />Status</span><span className="inline-flex items-center gap-2 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700"><span className="size-2 rounded-full bg-green-600" />Active</span></div>
+            </div>
+            <BookAppointmentModal serviceId={service._id} serviceName={service.serviceName} className="mt-6 inline-flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#4c3019] px-5 text-base font-semibold text-white transition-colors hover:bg-[#684521]" />
+          </aside>
+        </div>
+      </div>
+    </main>
+  );
 };
 
 export default ServiceDetailsPage;
