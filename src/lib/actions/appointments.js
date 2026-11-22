@@ -10,8 +10,8 @@ export const addNewAppointment = async (data) => {
   return res.json();
 };
 
-export const getMyAppointments = async (customerEmail) => {
-  const res = await fetch(`${BASE_URL}/my-appointments/${customerEmail}`, {
+export const getMyAppointments = async (customerId) => {
+  const res = await fetch(`${BASE_URL}/my-appointments/${customerId}`, {
     cache: "no-store",
   });
   if (!res.ok) {
@@ -20,11 +20,11 @@ export const getMyAppointments = async (customerEmail) => {
   return await res.json();
 };
 
-export const cancelMyAppointment = async (appointmentId, email) => {
+export const cancelMyAppointment = async (appointmentId, customerId) => {
   const res = await protectedMutation(
     `${BASE_URL}/my-appointments/${appointmentId}`,
     "PATCH",
-    { email },
+    { customerId },
   );
   if (!res.ok) throw new Error("Unable to cancel appointment");
   return res.json();

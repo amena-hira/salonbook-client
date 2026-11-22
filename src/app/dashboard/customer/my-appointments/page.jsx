@@ -10,13 +10,13 @@ const MyAppointmentsPage = async () => {
 
   let appointments = [];
   try {
-    const result = await getMyAppointments(session?.user?.email);
+    const result = await getMyAppointments(session.user.id);
     appointments = Array.isArray(result) ? result : (result.appointments || result.data || []);
   } catch {
     appointments = [];
   }
 
-  return <MyAppointmentsClient initialAppointments={appointments} customerEmail={session.user.email} />;
+  return <MyAppointmentsClient initialAppointments={appointments} customerId={session.user.id} />;
 };
 
 export default MyAppointmentsPage;

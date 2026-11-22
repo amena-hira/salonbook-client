@@ -5,6 +5,8 @@ import { CalendarDays, CircleX, Clock3, CreditCard, DollarSign, Eye } from "luci
 import { toast } from "@/components/ui/toast";
 import { cancelMyAppointment } from "@/lib/actions/appointments";
 
+const formatStatus = (status) => `${status}`.charAt(0).toUpperCase() + `${status}`.slice(1).toLowerCase();
+
 const normalizeAppointment = (appointment) => ({
   id: appointment._id,
   title: appointment.service.serviceName,
@@ -13,7 +15,7 @@ const normalizeAppointment = (appointment) => ({
   time: `${appointment.timeSlot} (${appointment.service.duration} mins)`,
   price: appointment.servicePrice,
   createdAt: appointment.createdAt,
-  status: appointment.appointmentStatus,
+  status: formatStatus(appointment.status),
   image: appointment.service.image,
 });
 
@@ -23,7 +25,7 @@ const statusStyles = {
   Cancelled: "bg-[#fde8e5] text-[#bd3d32]",
 };
 
-const MyAppointmentsClient = ({ customerEmail, initialAppointments }) => {
+const MyAppointmentsClient = ({ customerId, initialAppointments }) => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [appointments, setAppointments] = useState(initialAppointments.map(normalizeAppointment));
   const [cancellingId, setCancellingId] = useState("");
@@ -45,7 +47,7 @@ const MyAppointmentsClient = ({ customerEmail, initialAppointments }) => {
   const cancelAppointment = async (appointment) => {
     setCancellingId(appointment.id);
     try {
-      await cancelMyAppointment(appointment.id, customerEmail);
+      await cancelMyAppointment(appointment.id, customerId);
       setAppointments((items) => items.map((item) => item.id === appointment.id ? { ...item, status: "Cancelled" } : item));
       toast.add({ title: "Appointment cancelled", description: "Your pending appointment request has been cancelled.", type: "success" });
     } catch (error) {
