@@ -23,7 +23,7 @@ const normalizeAppointment = (appointment) => ({
   date: appointment.appointmentDate,
   time: appointment.timeSlot,
   duration: appointment.service.duration,
-  status: appointment.appointmentStatus,
+  status: appointment.status,
   payment: appointment.paymentStatus,
   image: appointment.service.image,
   createdAt: appointment.createdAt,
@@ -196,7 +196,7 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-2">
                     {item.image && (
-                      <span className="size-9 shrink-0 overflow-hidden rounded-full bg-cream">
+                      <span className="relative size-9 shrink-0 overflow-hidden rounded-full bg-cream">
                         <Image src={item.image} alt="" fill sizes="36px" className="object-cover" />
                       </span>
                     )}
