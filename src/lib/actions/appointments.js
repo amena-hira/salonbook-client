@@ -7,7 +7,9 @@ const BASE_URL =
 export const addNewAppointment = async (data) => {
   const api = `${BASE_URL}/appointments`;
   const res = await protectedMutation(api, "POST", data);
-  return res.json();
+  const result = await res.json();
+  if (!res.ok) throw new Error(result.message || "Unable to book appointment");
+  return result;
 };
 
 export const getMyAppointments = async (customerId) => {

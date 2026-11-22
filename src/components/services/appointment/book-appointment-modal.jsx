@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useSession } from "@/lib/auth-client";
-import { addNewAppointment } from "@/lib/actions/appointments";
+import { addNewAppointment, getAppointments } from "@/lib/actions/appointments";
 
 const timeSlots = [
   "10:00 AM",
@@ -31,11 +31,13 @@ const timeSlots = [
 
 const BookAppointmentModal = ({ service, className }) => {
   const { data: session } = useSession();
-  const isCustomer = session?.user?.role === 'customer'
+  const isCustomer = session?.user?.role === "customer";
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [message, setMessage] = useState("");
+  const [bookedSlots, setBookedSlots] = useState([]);
+  const [isLoadingSlots, setIsLoadingSlots] = useState(false);
 
   const serviceId = service?._id;
   const serviceName = service?.serviceName;
@@ -53,14 +55,56 @@ const BookAppointmentModal = ({ service, className }) => {
     setOpen(value);
   };
 
+  const selectDate = async (nextDate) => {
+    setDate(nextDate);
+    setTime("");
+    setBookedSlots([]);
+    if (!nextDate) return;
 
-  const submitBooking = async(event) => {
+    setIsLoadingSlots(true);
+    try {
+      const result = await getAppointments();
+      const appointments = Array.isArray(result)
+        ? result
+        : result.appointments || result.data || [];
+      const unavailableSlots = appointments
+        .filter(
+          (appointment) =>
+            appointment.serviceId === serviceId &&
+            appointment.appointmentDate === nextDate &&
+            ["Pending", "Confirmed"].includes(
+              appointment.status,
+            ),
+        )
+        .map((appointment) => appointment.timeSlot);
+      setBookedSlots(unavailableSlots);
+    } catch (error) {
+      toast.add({
+        title: "Unable to load time slots",
+        description: error.message || "Please choose a different date.",
+        type: "error",
+      });
+    } finally {
+      setIsLoadingSlots(false);
+    }
+  };
+
+  const submitBooking = async (event) => {
     event.preventDefault();
 
     if (!date || !time) {
       toast.add({
         title: "Choose a date and time",
         description: "Both appointment date and time slot are required.",
+        type: "error",
+      });
+      return;
+    }
+
+    if (bookedSlots.includes(time)) {
+      toast.add({
+        title: "Time slot unavailable",
+        description: "Please select another available time.",
         type: "error",
       });
       return;
@@ -84,7 +128,8 @@ const BookAppointmentModal = ({ service, className }) => {
 
       toast.add({
         title: `Appointment request sent for ${serviceName}`,
-        description: "Your appointment is pending confirmation and payment is unpaid.",
+        description:
+          "Your appointment is pending confirmation and payment is unpaid.",
         type: "success",
       });
       setOpen(false);
@@ -135,7 +180,8 @@ const BookAppointmentModal = ({ service, className }) => {
               <input
                 type="date"
                 value={date}
-                onChange={(event) => setDate(event.target.value)}
+                min={new Date().toISOString().split("T")[0]}
+                onChange={(event) => selectDate(event.target.value)}
                 className="h-11 w-full rounded-lg border border-border bg-background px-10 text-sm outline-none focus:border-[#684521]"
                 required
               />
@@ -148,12 +194,20 @@ const BookAppointmentModal = ({ service, className }) => {
               <select
                 value={time}
                 onChange={(event) => setTime(event.target.value)}
+                disabled={!date || isLoadingSlots}
                 className="h-11 w-full appearance-none rounded-lg border border-border bg-background px-3 text-sm font-normal outline-none focus:border-[#684521]"
                 required
               >
-                <option value="">Select an available time</option>
+                <option value="">
+                  {isLoadingSlots
+                    ? "Loading time slots..."
+                    : "Select an available time"}
+                </option>
                 {timeSlots.map((slot) => (
-                  <option key={slot}>{slot}</option>
+                  <option key={slot} disabled={bookedSlots.includes(slot)}>
+                    {slot}
+                    {bookedSlots.includes(slot) ? " (Booked)" : ""}
+                  </option>
                 ))}
               </select>
               <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-ash" />
@@ -165,8 +219,9 @@ const BookAppointmentModal = ({ service, className }) => {
               <button
                 key={slot}
                 type="button"
+                disabled={!date || isLoadingSlots || bookedSlots.includes(slot)}
                 onClick={() => setTime(slot)}
-                className={`rounded-md border px-1 py-2 text-xs font-medium transition-colors ${time === slot ? "border-[#684521] bg-[#684521] text-white" : "border-border bg-background text-charcoal hover:bg-cream"}`}
+                className={`rounded-md border px-1 py-2 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:bg-muted disabled:text-ash ${time === slot ? "border-[#684521] bg-[#684521] text-white" : "border-border bg-background text-charcoal hover:bg-cream"}`}
               >
                 {slot}
               </button>
