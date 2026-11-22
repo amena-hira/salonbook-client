@@ -12,14 +12,34 @@ import {
   Trash2,
 } from "lucide-react";
 import { toast } from "@/components/ui/toast";
-import { getServices, updateService } from "@/lib/actions/services";
+import {
+  deleteService,
+  getServices,
+  updateService,
+} from "@/lib/actions/services";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
+// const DEFAULT_SERVICE_IMAGE = "/images/services/brushing.jpg";
 
 const normalizeService = (service) => ({
   ...service,
   id: service._id || service.id,
   name: service.serviceName || service.name,
-  image: service.image || service.imageUrl || service.serviceImage || DEFAULT_SERVICE_IMAGE,
+  image:
+    service.image ||
+    service.imageUrl ||
+    service.serviceImage ||
+    DEFAULT_SERVICE_IMAGE,
   active: service.status
     ? service.status === "active"
     : (service.isActive ?? true),
@@ -33,25 +53,36 @@ const ManageServicesClient = ({ initialCategories, initialServices }) => {
   const [category, setCategory] = useState("All Categories");
   const [status, setStatus] = useState("All Statuses");
   const [updatingId, setUpdatingId] = useState("");
+  const [serviceToDelete, setServiceToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const categories = [
     "All Categories",
     ...initialCategories
-      .map((item) => typeof item === "string" ? item : item.name)
+      .map((item) => (typeof item === "string" ? item : item.name))
       .filter(Boolean),
   ];
 
   const loadServices = async (nextFilters) => {
     const query = new URLSearchParams();
-    if (nextFilters.category !== "All Categories") query.set("category", nextFilters.category);
-    if (nextFilters.search.trim()) query.set("search", nextFilters.search.trim());
-    if (nextFilters.status !== "All Statuses") query.set("status", nextFilters.status.toLowerCase());
+    if (nextFilters.category !== "All Categories")
+      query.set("category", nextFilters.category);
+    if (nextFilters.search.trim())
+      query.set("search", nextFilters.search.trim());
+    if (nextFilters.status !== "All Statuses")
+      query.set("status", nextFilters.status.toLowerCase());
 
     try {
       const result = await getServices(query.toString());
-      const items = Array.isArray(result) ? result : (result.services || result.data || []);
+      const items = Array.isArray(result)
+        ? result
+        : result.services || result.data || [];
       setServices(items.map(normalizeService));
     } catch (error) {
-      toast.add({ title: "Unable to load services", description: error.message || "Please try again.", type: "error" });
+      toast.add({
+        title: "Unable to load services",
+        description: error.message || "Please try again.",
+        type: "error",
+      });
     }
   };
 
@@ -96,13 +127,31 @@ const ManageServicesClient = ({ initialCategories, initialServices }) => {
       setUpdatingId("");
     }
   };
-  const showToast = (title) =>
-    toast.add({
-      title,
-      description:
-        "This action will be available when the service API is connected.",
-      type: "info",
-    });
+  const removeService = async () => {
+    if (!serviceToDelete) return;
+    setIsDeleting(true);
+
+    try {
+      await deleteService(serviceToDelete.id);
+      setServices((current) =>
+        current.filter((service) => service.id !== serviceToDelete.id),
+      );
+      toast.add({
+        title: "Service deleted",
+        description: `${serviceToDelete.name} has been removed.`,
+        type: "success",
+      });
+      setServiceToDelete(null);
+    } catch (error) {
+      toast.add({
+        title: "Unable to delete service",
+        description: error.message || "Please try again.",
+        type: "error",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <section className="mx-auto w-full max-w-[1440px] px-5 py-7 sm:px-7">
@@ -201,6 +250,9 @@ const ManageServicesClient = ({ initialCategories, initialServices }) => {
                       <img
                         src={service.image}
                         alt=""
+                        // onError={(event) => {
+                        //   event.currentTarget.src = DEFAULT_SERVICE_IMAGE;
+                        // }}
                         className="size-full object-cover"
                       />
                     </span>
@@ -254,7 +306,7 @@ const ManageServicesClient = ({ initialCategories, initialServices }) => {
                     </Link>
                     <button
                       type="button"
-                      onClick={() => showToast("Delete service")}
+                      onClick={() => setServiceToDelete(service)}
                       className="inline-flex items-center gap-1.5 rounded-md border border-red-300 px-3 py-2 text-xs font-semibold text-destructive hover:bg-destructive/10"
                     >
                       <Trash2 className="size-4" />
@@ -272,6 +324,33 @@ const ManageServicesClient = ({ initialCategories, initialServices }) => {
           </p>
         )}
       </div>
+      <AlertDialog
+        open={Boolean(serviceToDelete)}
+        onOpenChange={(open) => !open && setServiceToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogMedia className="bg-red-100 text-destructive">
+              <Trash2 />
+            </AlertDialogMedia>
+            <AlertDialogTitle>Delete service?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete {serviceToDelete?.name}? This
+              action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={removeService}
+              disabled={isDeleting}
+              className="bg-destructive text-white hover:bg-destructive/90"
+            >
+              {isDeleting ? "Deleting..." : "Delete Service"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </section>
   );
 };
