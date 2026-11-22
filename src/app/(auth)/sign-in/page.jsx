@@ -7,38 +7,57 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, LockKeyhole, Mail, Scissors } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "@/components/ui/toast";
 
 const SignInContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirectTo = searchParams.get("redirectTo") ?? "/";
-    const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSignIn = async (event) => {
         event.preventDefault();
-        setError(null);
         setIsLoading(true);
 
         const data = new FormData(event.currentTarget);
-        const { data: signInResponse, error: signInError } = await authClient.signIn.email({
-            email: String(data.get("email") || ""),
-            password: String(data.get("password") || ""),
-            rememberMe: true,
-            callbackURL: redirectTo,
-        });
+        const password = String(data.get("password") || "");
 
-        console.log("sign in response", signInResponse, signInError);
+        try {
+            const { error: signInError } = await authClient.signIn.email({
+                email: String(data.get("email") || ""),
+                password,
+                rememberMe: data.get("remember") === "on",
+                callbackURL: redirectTo,
+            });
 
-        if (signInError) {
-            setError(signInError.message || "Unable to sign in. Please try again.");
+            if (signInError) {
+                toast.add({ title: "Sign in failed", description: signInError.message || "Unable to sign in. Please try again.", type: "error" });
+                return;
+            }
+
+            toast.add({ title: "Welcome back", description: "You have signed in successfully.", type: "success" });
+            router.refresh();
+            router.push(redirectTo);
+        } catch (requestError) {
+            toast.add({ title: "Sign in failed", description: requestError.message || "Unable to sign in. Please try again.", type: "error" });
+        } finally {
             setIsLoading(false);
-            return;
         }
+    };
 
-        router.refresh();
-        router.push(redirectTo);
-        setIsLoading(false);
+    const handleGoogleSignIn = async () => {
+        try {
+            const { error: signInError } = await authClient.signIn.social({
+                provider: "google",
+                callbackURL: redirectTo,
+            });
+
+            if (signInError) {
+                toast.add({ title: "Google sign in failed", description: signInError.message || "Unable to sign in with Google.", type: "error" });
+            }
+        } catch (requestError) {
+            toast.add({ title: "Google sign in failed", description: requestError.message || "Unable to sign in with Google.", type: "error" });
+        }
     };
 
     return (
@@ -117,8 +136,6 @@ const SignInContent = () => {
                         </Link>
                     </div>
 
-                    {error && <p role="alert" className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</p>}
-
                     <button type="submit" disabled={isLoading} className="h-14 w-full rounded-lg bg-charcoal text-base font-semibold text-white transition-colors hover:bg-charcoal/85 disabled:cursor-not-allowed disabled:opacity-60">
                         {isLoading ? "Signing In..." : "Sign In"}
                     </button>
@@ -130,7 +147,7 @@ const SignInContent = () => {
                     <span className="h-px flex-1 bg-border" />
                 </div>
 
-                <button type="button" className="flex h-14 w-full items-center justify-center gap-3 rounded-lg border border-border bg-background text-base font-semibold text-charcoal transition-colors hover:bg-cream">
+                <button type="button" onClick={handleGoogleSignIn} className="flex h-14 w-full items-center justify-center gap-3 rounded-lg border border-border bg-background text-base font-semibold text-charcoal transition-colors hover:bg-cream">
                     <FcGoogle className="size-6" aria-hidden="true" />
                     Continue with Google
                 </button>

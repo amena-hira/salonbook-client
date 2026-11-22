@@ -5,11 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, LockKeyhole, Mail, Scissors, Trash2, Upload, UserRound } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "@/components/ui/toast";
+
+const passwordIsValid = (password) =>
+    password.length >= 6 && /[A-Z]/.test(password) && /[a-z]/.test(password);
+
+const passwordRulesMessage = "Password must be at least 6 characters and include one uppercase and one lowercase letter.";
 
 const SignUpPage = () => {
     const router = useRouter();
-    const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState("");
     const [imagePreview, setImagePreview] = useState("");
@@ -42,7 +48,9 @@ const SignUpPage = () => {
 
             setImageUrl(result.data.url);
         } catch (uploadError) {
-            setImageError(uploadError.message || "Unable to upload the selected image.");
+            const message = uploadError.message || "Unable to upload the selected image.";
+            setImageError(message);
+            toast.add({ title: "Image upload failed", description: message, type: "error" });
         } finally {
             setIsUploadingImage(false);
         }
@@ -58,30 +66,53 @@ const SignUpPage = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(null);
         setIsLoading(true);
 
         const data = new FormData(event.currentTarget);
+        const password = String(data.get("password") || "");
+
+        if (!passwordIsValid(password)) {
+            toast.add({ title: "Invalid password", description: passwordRulesMessage, type: "error" });
+            setIsLoading(false);
+            return;
+        }
+
         try {
             const { error: signUpError } = await authClient.signUp.email({
                 name: String(data.get("name") || ""),
                 email: String(data.get("email") || ""),
-                password: String(data.get("password") || ""),
+                password,
                 callbackURL: "/",
                 image: imageUrl || undefined,
             });
 
             if (signUpError) {
-                setError(signUpError.message || "Something went wrong. Please try again.");
+                toast.add({ title: "Registration failed", description: signUpError.message || "Something went wrong. Please try again.", type: "error" });
                 return;
             }
 
+            toast.add({ title: "Account created", description: "Welcome to SalonBook!", type: "success" });
             router.refresh();
             router.push("/");
         } catch (requestError) {
-            setError(requestError.message || "Something went wrong. Please try again.");
+            toast.add({ title: "Registration failed", description: requestError.message || "Something went wrong. Please try again.", type: "error" });
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleGoogleSignUp = async () => {
+        try {
+            const { error: signUpError } = await authClient.signIn.social({
+                provider: "google",
+                callbackURL: "/",
+            });
+
+            if (signUpError) {
+                toast.add({ title: "Google registration failed", description: signUpError.message || "Unable to continue with Google.", type: "error" });
+            }
+        } catch (requestError) {
+            toast.add({ title: "Google registration failed", description: requestError.message || "Unable to continue with Google.", type: "error" });
         }
     };
 
@@ -104,7 +135,7 @@ const SignUpPage = () => {
                 </div>
             </section>
 
-            <section className="flex items-center justify-center overflow-y-auto px-6 py-12 sm:px-10 lg:px-16 xl:px-24">
+            <section className="flex items-start justify-center overflow-y-auto px-6 py-12 sm:px-10 lg:px-16 xl:px-24">
                 <div className="w-full max-w-xl">
                     <Link href="/" className="mb-12 flex items-center gap-3 text-charcoal lg:hidden">
                         <span className="grid size-10 place-items-center rounded-full border border-charcoal/50 text-charcoal">
@@ -142,6 +173,7 @@ const SignUpPage = () => {
                                 <input type="password" name="password" autoComplete="new-password" required minLength="6" placeholder="Create a password" className="h-14 w-full rounded-lg border border-border bg-background px-12 pr-12 text-base text-charcoal outline-none placeholder:text-ash focus:border-charcoal" />
                                 <Eye className="pointer-events-none absolute right-4 top-1/2 size-5 -translate-y-1/2 text-ash" aria-hidden="true" />
                             </span>
+                            <span className="mt-2 block text-xs text-ash">Minimum 6 characters, one uppercase letter, and one lowercase letter.</span>
                         </label>
 
                         <fieldset>
@@ -170,12 +202,21 @@ const SignUpPage = () => {
                             {imageError && <p className="mt-2 text-sm text-destructive">{imageError}</p>}
                         </fieldset>
 
-                        {error && <p role="alert" className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</p>}
-
                         <button type="submit" disabled={isLoading || isUploadingImage} className="mt-3 h-14 w-full rounded-lg bg-charcoal text-base font-semibold text-white transition-colors hover:bg-charcoal/85 disabled:cursor-not-allowed disabled:opacity-60">
                             {isLoading ? "Creating Account..." : "Sign Up"}
                         </button>
                     </form>
+
+                    <div className="my-8 flex items-center gap-4 text-sm text-ash">
+                        <span className="h-px flex-1 bg-border" />
+                        or
+                        <span className="h-px flex-1 bg-border" />
+                    </div>
+
+                    <button type="button" onClick={handleGoogleSignUp} className="flex h-14 w-full items-center justify-center gap-3 rounded-lg border border-border bg-background text-base font-semibold text-charcoal transition-colors hover:bg-cream">
+                        <FcGoogle className="size-6" aria-hidden="true" />
+                        Continue with Google
+                    </button>
 
                     <p className="mt-7 text-center text-sm text-ash sm:text-base">Already have an account? <Link href="/sign-in" className="font-semibold text-charcoal underline decoration-[#b89462] decoration-2 underline-offset-8 hover:text-ash">Sign In</Link></p>
                 </div>

@@ -1,5 +1,6 @@
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,7 +24,9 @@ export default function RootLayout({ children }) {
       className={`${inter.variable} ${playfair.variable} antialiased`}
     >
       <body className="flex min-h-screen flex-col">
-        <div className="flex flex-1 flex-col">{children}</div>
+        <Toaster>
+          <div className="flex flex-1 flex-col">{children}</div>
+        </Toaster>
       </body>
     </html>
   );
