@@ -32,16 +32,17 @@ const customerLinks = [
   { label: "Home", href: "/", icon: Home },
   { label: "Overview", href: "/dashboard/customer", icon: LayoutGrid },
   { label: "My Appointments", href: "/dashboard/customer/my-appointments", icon: CalendarDays },
-  { label: "My Profile", href: "/dashboard/customer/my-profile", icon: UserRound },
+  { label: "My Profile", href: "/dashboard/my-profile", icon: UserRound },
 ];
 
 const adminLinks = [
-  { label: "Dashboard", href: "/dashboard/admin", icon: Home },
+  { label: "Home", href: "/", icon: Home },
+  { label: "Dashboard", href: "/dashboard/admin", icon: LayoutGrid },
   { label: "Services", href: "/dashboard/admin/manage-services", icon: Wrench },
-  { label: "Categories", href: "/dashboard/admin/categories", icon: Grid2X2 },
   { label: "Appointment Requests", href: "/dashboard/admin/appointments", icon: CalendarDays },
   { label: "Customers", href: "/dashboard/admin/manage-users", icon: UsersRound },
   { label: "Transactions", href: "/dashboard/admin/transactions", icon: CreditCard },
+  { label: "My Profile", href: "/dashboard/my-profile", icon: UserRound },
 ];
 
 const DashboardSidebar = () => {
