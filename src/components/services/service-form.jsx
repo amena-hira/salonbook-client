@@ -6,19 +6,12 @@ import Link from "next/link";
 import { Clock3, ImagePlus, Layers3, Scissors, Upload } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 
-const categories = [
-  "Haircut & Styling",
-  "Hair Coloring",
-  "Facial & Skincare",
-  "Makeup",
-  "Manicure & Pedicure",
-  "Spa & Massage",
-];
-
-const ServiceForm = ({ initialService, isSaving, onSubmit, submitLabel }) => {
+const ServiceForm = ({ categories = [], initialService, isSaving, onSubmit, submitLabel }) => {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(initialService?.image || "");
-  const [status, setStatus] = useState(initialService?.status ?? "active");
+  const [status, setStatus] = useState(
+    initialService?.status ?? (initialService?.isActive === false ? "inactive" : "active"),
+  );
 
   const selectImage = (event) => {
     const file = event.target.files?.[0];
@@ -70,7 +63,7 @@ const ServiceForm = ({ initialService, isSaving, onSubmit, submitLabel }) => {
               Service Name <em className="not-italic text-destructive">*</em>
               <input
                 name="serviceName"
-                defaultValue={initialService?.serviceName}
+                defaultValue={initialService?.serviceName || initialService?.name}
                 required
                 placeholder="e.g. Classic Haircut & Styling"
                 className="mt-2 h-12 w-full rounded-lg border border-border bg-background px-4 font-normal outline-none placeholder:text-ash"
@@ -89,7 +82,7 @@ const ServiceForm = ({ initialService, isSaving, onSubmit, submitLabel }) => {
                   Select a category
                 </option>
                 {categories.map((item) => (
-                  <option key={item}>{item}</option>
+                  <option key={item._id}>{item.name}</option>
                 ))}
               </select>
             </label>
