@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   CalendarDays,
   CheckCircle2,
@@ -118,7 +119,6 @@ const AdminAppointmentsPage = () => {
   const [appointments, setAppointments] = useState(initialAppointments);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All Statuses");
-  const [selected, setSelected] = useState(null);
   const visible = appointments.filter(
     (item) =>
       `${item.customer} ${item.service} ${item.id}`
@@ -286,13 +286,13 @@ const AdminAppointmentsPage = () => {
                 </td>
                 <td className="px-4 py-4">
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => setSelected(item)}
+                    <Link
+                      href={`/dashboard/admin/appointments/${item.id}`}
                       className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-2 text-xs font-semibold"
                     >
                       <Eye className="size-4" />
                       View
-                    </button>
+                    </Link>
                     {item.status === "Pending" ? (
                       <button
                         onClick={() => updateStatus(item.id, "Confirmed")}
@@ -315,43 +315,6 @@ const AdminAppointmentsPage = () => {
           </tbody>
         </table>
       </div>
-      {selected && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4">
-          <div className="w-full max-w-lg rounded-xl bg-card p-6 shadow-xl">
-            <div className="flex justify-between">
-              <h2 className="font-heading text-2xl font-semibold">
-                Appointment Details
-              </h2>
-              <button onClick={() => setSelected(null)}>
-                <X />
-              </button>
-            </div>
-            <div className="mt-5 grid gap-3 text-sm">
-              <p>
-                <b>Customer:</b> {selected.customer} ({selected.email})
-              </p>
-              <p>
-                <b>Service:</b> {selected.service} — ${selected.price}
-              </p>
-              <p>
-                <b>Appointment:</b> {selected.date}, {selected.time} (
-                {selected.duration} min)
-              </p>
-              <p>
-                <b>Status:</b> {selected.status} · <b>Payment:</b>{" "}
-                {selected.payment}
-              </p>
-              <p>
-                <b>Booking Request Date:</b> {selected.bookedAt}
-              </p>
-              <p>
-                <b>Customer Message:</b>{" "}
-                {selected.message || "No message provided."}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 };
