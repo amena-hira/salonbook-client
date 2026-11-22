@@ -15,11 +15,6 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
-      role: {
-        type: ["customer", "admin"],
-        input: false,
-        defaultValue: "customer",
-      },
       phone: {
         type: "string",
         required: false,
@@ -33,7 +28,12 @@ export const auth = betterAuth({
       clientSecret: process.env.BETTER_AUTH_GOOGLE_CLIENT_SECRET,
     },
   },
-  plugins: [admin()],
+  plugins: [
+    admin({
+      defaultRole: "customer",
+      adminRoles: ["admin"],
+    }),
+  ],
   database: mongodbAdapter(db, {
     client,
   }),
