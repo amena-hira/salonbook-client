@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "@/components/ui/toast";
+import { updateAppointment } from "@/lib/actions/appointments";
 
 const normalizeAppointment = (appointment) => ({
   id: appointment._id,
@@ -45,6 +46,7 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All Statuses");
   const [serviceCategory, setServiceCategory] = useState("All Services");
+  const [updatingId, setUpdatingId] = useState("");
   const categories = [
     "All Services",
     ...new Set(appointments.map((item) => item.category)),
@@ -57,17 +59,29 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
       (status === "All Statuses" || item.status === status) &&
       (serviceCategory === "All Services" || item.category === serviceCategory),
   );
-  const updateStatus = (id, nextStatus) => {
-    setAppointments((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, status: nextStatus } : item,
-      ),
-    );
-    toast.add({
-      title: `Appointment ${nextStatus.toLowerCase()}`,
-      description: "The appointment status has been updated.",
-      type: "success",
-    });
+  const updateStatus = async (id, nextStatus) => {
+    setUpdatingId(id);
+    try {
+      await updateAppointment(id, { status: nextStatus });
+      setAppointments((items) =>
+        items.map((item) =>
+          item.id === id ? { ...item, status: nextStatus } : item,
+        ),
+      );
+      toast.add({
+        title: `Appointment ${nextStatus.toLowerCase()}`,
+        description: "The appointment status has been updated.",
+        type: "success",
+      });
+    } catch (error) {
+      toast.add({
+        title: "Unable to update appointment",
+        description: error.message || "Please try again.",
+        type: "error",
+      });
+    } finally {
+      setUpdatingId("");
+    }
   };
 
   return (
@@ -182,7 +196,15 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
               <tr key={item.id} className="border-t border-border">
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-2">
-                    {item.image && <span className="size-9 shrink-0 overflow-hidden rounded-full bg-cream"><img src={item.image} alt="" className="size-full object-cover" /></span>}
+                    {item.image && (
+                      <span className="size-9 shrink-0 overflow-hidden rounded-full bg-cream">
+                        <img
+                          src={item.image}
+                          alt=""
+                          className="size-full object-cover"
+                        />
+                      </span>
+                    )}
                     <span className="text-sm font-semibold">
                       {item.service}
                     </span>
@@ -192,9 +214,7 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
                   <b className="block text-sm">{item.customer}</b>
                   <small className="text-xs text-ash">{item.email}</small>
                 </td>
-                <td className="px-4 py-4 text-xs">
-                  ${item.price}
-                </td>
+                <td className="px-4 py-4 text-xs">${item.price}</td>
                 <td className="px-4 py-4 text-xs text-ash">
                   {item.date}
                   <br />
@@ -233,23 +253,25 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
                     {item.status === "Pending" ? (
                       <>
                         <button
+                          disabled={updatingId === item.id}
                           onClick={() => updateStatus(item.id, "Confirmed")}
-                          className="rounded-md bg-[#3c2a1d] px-3 py-2 text-xs font-semibold text-white"
+                          className="rounded-md bg-[#3c2a1d] px-3 py-2 text-xs font-semibold text-white disabled:opacity-60"
                         >
                           Confirm
                         </button>
                         <button
+                          disabled={updatingId === item.id}
                           onClick={() => updateStatus(item.id, "Cancelled")}
-                          className="rounded-md border border-red-300 px-3 py-2 text-xs font-semibold text-destructive"
+                          className="rounded-md border border-red-300 px-3 py-2 text-xs font-semibold text-destructive disabled:opacity-60"
                         >
                           <X className="size-4" />
-
                         </button>
                       </>
                     ) : item.status === "Confirmed" ? (
                       <button
+                        disabled={updatingId === item.id}
                         onClick={() => updateStatus(item.id, "Cancelled")}
-                        className="rounded-md border border-red-300 px-3 py-2 text-xs font-semibold text-destructive"
+                        className="rounded-md border border-red-300 px-3 py-2 text-xs font-semibold text-destructive disabled:opacity-60"
                       >
                         <X className="size-4" />
                       </button>

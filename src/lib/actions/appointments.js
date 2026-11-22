@@ -29,3 +29,13 @@ export const getAppointments = async () => {
   }
   return await res.json();
 };
+
+export const updateAppointment = async (appointmentId, data) => {
+  const res = await protectedMutation(
+    `${BASE_URL}/appointments/${appointmentId}`,
+    "PATCH",
+    data,
+  );
+  if (!res.ok) throw new Error("Unable to update appointment");
+  return res.json();
+};
