@@ -17,7 +17,7 @@ export async function proxy(request) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (user.banned) {
+  if (user.isBlocked === true || user.isBlocked === "true") {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
