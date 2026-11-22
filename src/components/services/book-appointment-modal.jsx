@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useSession } from "@/lib/auth-client";
 
 const timeSlots = [
   "10:00 AM",
@@ -28,10 +29,26 @@ const timeSlots = [
 ];
 
 const BookAppointmentModal = ({ serviceId, serviceName, className }) => {
+  const { data: session } = useSession();
+  const isCustomer = session?.user?.role === 'customer'
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [message, setMessage] = useState("");
+
+  const handleDialogChange = (value) => {
+    if (value && !isCustomer) {
+      toast.add({
+        title: "Booking Not Allowed",
+        description: "Only customers can book appointments.",
+        type: "error",
+      });
+      return;
+    }
+
+    setOpen(value);
+  };
+
 
   const submitBooking = (event) => {
     event.preventDefault();
@@ -66,7 +83,7 @@ const BookAppointmentModal = ({ serviceId, serviceName, className }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isCustomer ? open : false} onOpenChange={handleDialogChange}>
       <DialogTrigger render={<button className={className} />}>
         <CalendarDays className="size-6" aria-hidden="true" />
         Book Appointment
