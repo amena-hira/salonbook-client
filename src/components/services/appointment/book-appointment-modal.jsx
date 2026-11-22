@@ -32,6 +32,8 @@ const timeSlots = [
 const BookAppointmentModal = ({ service, className }) => {
   const { data: session } = useSession();
   const isCustomer = session?.user?.role === "customer";
+  const isBlocked =
+    session?.user?.isBlocked === true || session?.user?.isBlocked === "true";
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -43,6 +45,15 @@ const BookAppointmentModal = ({ service, className }) => {
   const serviceName = service?.serviceName;
 
   const handleDialogChange = (value) => {
+    if (value && isBlocked) {
+      toast.add({
+        title: "Account blocked",
+        description: "Your account cannot book appointments.",
+        type: "error",
+      });
+      return;
+    }
+
     if (value && !isCustomer) {
       toast.add({
         title: "Booking Not Allowed",
@@ -145,7 +156,7 @@ const BookAppointmentModal = ({ service, className }) => {
   };
 
   return (
-    <Dialog open={isCustomer ? open : false} onOpenChange={handleDialogChange}>
+    <Dialog open={isCustomer && !isBlocked ? open : false} onOpenChange={handleDialogChange}>
       <DialogTrigger render={<button className={className} />}>
         <CalendarDays className="size-6" aria-hidden="true" />
         Book Appointment
