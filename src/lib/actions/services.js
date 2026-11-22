@@ -56,7 +56,6 @@ export const getAllServices = async () => {
   return res.json();
 };
 
-
 export const deleteService = async (serviceId) => {
   const res = await protectedMutation(`${BASE_URL}/services/${serviceId}`, "DELETE");
   if (!res.ok) throw new Error("Unable to delete service");

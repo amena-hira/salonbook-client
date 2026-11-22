@@ -1,0 +1,20 @@
+import { protectedMutation } from "../core/server";
+
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+
+// customer part
+export const addNewAppointment = async (data) => {
+  const api = `${BASE_URL}/appointments`;
+  const res = await protectedMutation(api, "POST", data);
+  return res.json();
+};
+
+// Admin part
+export const getAppointments = async() =>{
+    const res = await fetch(`${BASE_URL}/appointments`, { cache: "no-store" });
+    if (!res.ok) {
+      throw new Error("Unable to load appointments");
+    }
+    return await res.json();
+}

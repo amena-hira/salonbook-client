@@ -156,8 +156,7 @@ const ServiceDetailsPage = async ({ params }) => {
               </div>
             </div>
             <BookAppointmentModal
-              serviceId={service._id}
-              serviceName={service.serviceName}
+              service={service}
               className="mt-6 inline-flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#4c3019] px-5 text-base font-semibold text-white transition-colors hover:bg-[#684521]"
             />
           </aside>

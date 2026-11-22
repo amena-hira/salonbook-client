@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useSession } from "@/lib/auth-client";
+import { addNewAppointment } from "@/lib/actions/appointments";
 
 const timeSlots = [
   "10:00 AM",
@@ -28,13 +29,16 @@ const timeSlots = [
   "4:30 PM",
 ];
 
-const BookAppointmentModal = ({ serviceId, serviceName, className }) => {
+const BookAppointmentModal = ({ service, className }) => {
   const { data: session } = useSession();
   const isCustomer = session?.user?.role === 'customer'
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [message, setMessage] = useState("");
+
+  const serviceId = service?._id;
+  const serviceName = service?.serviceName;
 
   const handleDialogChange = (value) => {
     if (value && !isCustomer) {
@@ -50,7 +54,7 @@ const BookAppointmentModal = ({ serviceId, serviceName, className }) => {
   };
 
 
-  const submitBooking = (event) => {
+  const submitBooking = async(event) => {
     event.preventDefault();
 
     if (!date || !time) {
@@ -64,13 +68,23 @@ const BookAppointmentModal = ({ serviceId, serviceName, className }) => {
 
     const appointment = {
       serviceId,
+      customerId: session?.user?.id,
       appointmentDate: date,
       timeSlot: time,
       message,
+      servicePrice: service?.price,
       appointmentStatus: "Pending",
       paymentStatus: "Unpaid",
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
+
     console.log("Appointment request", appointment);
+
+    const response = await addNewAppointment(appointment);
+
+    if (!response.acknowledged) throw new Error("Unable to add appointment.");
+
     toast.add({
       title: "Appointment request sent",
       description:
