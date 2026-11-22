@@ -10,8 +10,11 @@ export const addNewAppointment = async (data) => {
   return res.json();
 };
 
-export const getMyAppointments = async (customerId) => {
-  const res = await fetch(`${BASE_URL}/appointments/${customerId}`, { cache: "no-store" });
+export const getMyAppointments = async (customerEmail) => {
+  console.log("customer email: ",customerEmail);
+  const res = await fetch(`${BASE_URL}/my-appointments/${customerEmail}`, {
+    cache: "no-store",
+  });
   if (!res.ok) {
     throw new Error("Unable to load appointments");
   }
@@ -19,10 +22,10 @@ export const getMyAppointments = async (customerId) => {
 };
 
 // Admin part
-export const getAppointments = async() =>{
-    const res = await fetch(`${BASE_URL}/appointments`, { cache: "no-store" });
-    if (!res.ok) {
-      throw new Error("Unable to load appointments");
-    }
-    return await res.json();
-}
+export const getAppointments = async () => {
+  const res = await fetch(`${BASE_URL}/appointments`, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error("Unable to load appointments");
+  }
+  return await res.json();
+};

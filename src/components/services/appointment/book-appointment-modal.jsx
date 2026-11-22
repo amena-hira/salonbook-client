@@ -68,7 +68,7 @@ const BookAppointmentModal = ({ service, className }) => {
 
     const appointment = {
       serviceId,
-      customerId: session?.user?.id,
+      customerEmail: session?.user?.email,
       appointmentDate: date,
       timeSlot: time,
       message,
