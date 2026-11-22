@@ -4,7 +4,6 @@ import { useSession } from '@/lib/auth-client';
 import { Bell } from 'lucide-react';
 import UserMenu from './user-menu';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 const AuthenticateNavItem = () => {
     const { data: session } = useSession();

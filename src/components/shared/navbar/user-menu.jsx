@@ -14,8 +14,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useRouter } from "next/navigation";
+import { signOut } from "@/lib/auth-client";
 
 const UserMenu = ({ user }) => {
+  const router = useRouter();
   const initials = user?.name
     ?.split(" ")
     .map((name) => name[0])
@@ -29,7 +32,7 @@ const UserMenu = ({ user }) => {
         onSuccess: () => router.push("/"),
       },
     });
-  }
+  };
 
   return (
     <DropdownMenu>
