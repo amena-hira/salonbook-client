@@ -12,6 +12,7 @@ import {
   UserRound,
   UsersRound,
   Wrench,
+  CreditCard
 } from "lucide-react";
 import { signOut, useSession } from "@/lib/auth-client";
 import {
@@ -40,6 +41,7 @@ const adminLinks = [
   { label: "Categories", href: "/dashboard/admin/categories", icon: Grid2X2 },
   { label: "Appointment Requests", href: "/dashboard/admin/appointments", icon: CalendarDays },
   { label: "Customers", href: "/dashboard/admin/customers", icon: UsersRound },
+  { label: "Transactions", href: "/dashboard/admin/transactions", icon: CreditCard },
 ];
 
 const DashboardSidebar = () => {

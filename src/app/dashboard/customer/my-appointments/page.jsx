@@ -54,32 +54,22 @@ const MyAppointmentsPage = () => {
         ))}
       </div>
 
-      <div className="mt-10 space-y-4">
-        {visibleAppointments.map((appointment) => (
-          <article key={appointment.title} className="flex flex-col gap-5 rounded-2xl border border-border bg-card p-6 xl:min-h-48 xl:flex-row xl:items-center xl:gap-7">
-            <Image src={appointment.image} alt={appointment.title} width={160} height={144} className="h-36 w-40 shrink-0 rounded-xl object-cover" />
-            <div className="min-w-0 flex-1">
-              <h3 className="text-lg font-semibold text-charcoal sm:text-xl">{appointment.title}</h3>
-              <span className="mt-2 inline-block rounded-md bg-cream px-3 py-1 text-xs font-medium text-charcoal">{appointment.category}</span>
-              <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-ash">
-                <span className="flex items-center gap-2"><CalendarDays className="size-4" aria-hidden="true" />{appointment.date}</span>
-                <span className="flex items-center gap-2"><Clock3 className="size-4" aria-hidden="true" />{appointment.time}</span>
-              </div>
-            </div>
-            <div className="xl:w-40 xl:shrink-0 xl:text-center">
-              <span className={`inline-block rounded-full px-4 py-2 text-sm font-semibold ${statusStyles[appointment.status]}`}>{appointment.status}</span>
-            </div>
-            <div className="flex shrink-0 flex-wrap gap-3 border-border pt-5 xl:border-t-0 xl:border-l xl:pl-7 xl:pt-0">
-                {appointment.status === "Confirmed" && (
-                  <button type="button" onClick={() => toast.add({ title: "Payment", description: "Payment is not available yet.", type: "info" })} className="inline-flex items-center gap-2 rounded-lg bg-[#3c2a1d] px-4 py-2.5 text-sm font-semibold text-white hover:bg-charcoal"><CreditCard className="size-4" aria-hidden="true" />Pay Now</button>
-                )}
-                {appointment.status === "Pending" && (
-                  <button type="button" onClick={() => toast.add({ title: "Appointment cancelled", description: `${appointment.title} has been cancelled.`, type: "success" })} className="inline-flex items-center gap-2 rounded-lg border border-red-300 px-4 py-2.5 text-sm font-semibold text-destructive hover:bg-destructive/10"><CircleX className="size-4" aria-hidden="true" />Cancel Appointment</button>
-                )}
-                <button type="button" onClick={() => showDetails(appointment.title)} className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-charcoal hover:bg-cream"><Eye className="size-4" aria-hidden="true" />View Details</button>
-            </div>
-          </article>
-        ))}
+      <div className="mt-8 overflow-x-auto rounded-xl border border-border bg-card">
+        <table className="w-full min-w-[900px] text-left">
+          <thead className="border-b border-border bg-cream/40 text-xs text-ash">
+            <tr><th className="px-5 py-3 font-medium">Service</th><th className="px-4 py-3 font-medium">Date &amp; Time</th><th className="px-4 py-3 font-medium">Status</th><th className="px-5 py-3 text-right font-medium">Actions</th></tr>
+          </thead>
+          <tbody>
+            {visibleAppointments.map((appointment) => (
+              <tr key={appointment.title} className="border-b border-border last:border-0">
+                <td className="px-5 py-4"><div className="flex items-center gap-3"><Image src={appointment.image} alt={appointment.title} width={64} height={64} className="size-16 rounded-lg object-cover" /><div><h3 className="text-sm font-semibold text-charcoal">{appointment.title}</h3><span className="mt-1 inline-block rounded bg-cream px-2 py-0.5 text-xs text-charcoal">{appointment.category}</span></div></div></td>
+                <td className="px-4 py-4 text-xs text-ash"><p className="flex items-center gap-1.5"><CalendarDays className="size-3.5" aria-hidden="true" />{appointment.date}</p><p className="mt-1 flex items-center gap-1.5"><Clock3 className="size-3.5" aria-hidden="true" />{appointment.time}</p></td>
+                <td className="px-4 py-4"><span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[appointment.status]}`}>{appointment.status}</span></td>
+                <td className="px-5 py-4"><div className="flex justify-end gap-2">{appointment.status === "Confirmed" && <button type="button" onClick={() => toast.add({ title: "Payment", description: "Payment is not available yet.", type: "info" })} className="inline-flex items-center gap-1.5 rounded-md bg-[#3c2a1d] px-3 py-2 text-xs font-semibold text-white"><CreditCard className="size-3.5" aria-hidden="true" />Pay Now</button>}{appointment.status === "Pending" && <button type="button" onClick={() => toast.add({ title: "Appointment cancelled", description: `${appointment.title} has been cancelled.`, type: "success" })} className="inline-flex items-center gap-1.5 rounded-md border border-red-300 px-3 py-2 text-xs font-semibold text-destructive"><CircleX className="size-3.5" aria-hidden="true" />Cancel</button>}<button type="button" onClick={() => showDetails(appointment.title)} className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-xs font-semibold text-charcoal"><Eye className="size-3.5" aria-hidden="true" />Details</button></div></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </section>
   );

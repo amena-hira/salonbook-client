@@ -54,21 +54,19 @@ const CustomerDashboardPage = () => {
             <h3 className="flex items-center gap-3 font-heading text-2xl font-semibold text-charcoal"><CalendarDays className="size-6" aria-hidden="true" />Recent Appointments</h3>
             <Link href="/dashboard/customer/my-appointments" className="inline-flex items-center gap-2 text-sm font-semibold text-charcoal hover:text-ash">View All <ArrowRight className="size-4" aria-hidden="true" /></Link>
           </div>
-          <div className="px-6">
-            {appointments.map((appointment, index) => (
-              <article key={appointment.title} className={`flex flex-col gap-4 py-5 sm:flex-row sm:items-center ${index < appointments.length - 1 ? "border-b border-border" : ""}`}>
-                <Image src={appointment.image} alt={appointment.title} width={138} height={112} className="h-28 w-36 rounded-xl object-cover" />
-                <div className="min-w-0 flex-1">
-                  <h4 className="text-lg font-semibold text-charcoal">{appointment.title}</h4>
-                  <span className="mt-2 inline-block rounded-md bg-cream px-3 py-1 text-xs font-medium text-charcoal">{appointment.category}</span>
-                  <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-xs text-ash sm:text-sm">
-                    <span className="flex items-center gap-2"><CalendarDays className="size-4" aria-hidden="true" />{appointment.date}</span>
-                    <span className="flex items-center gap-2"><Clock3 className="size-4" aria-hidden="true" />{appointment.time}</span>
-                  </div>
-                </div>
-                <span className={`self-start rounded-full px-4 py-2 text-xs font-semibold sm:self-center ${statusStyles[appointment.status]}`}>{appointment.status}</span>
-              </article>
-            ))}
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[680px] text-left">
+              
+              <tbody>
+                {appointments.map((appointment) => (
+                  <tr key={appointment.title} className="border-b border-border last:border-0">
+                    <td className="px-6 py-4"><div className="flex items-center gap-3"><Image src={appointment.image} alt={appointment.title} width={56} height={56} className="size-14 rounded-lg object-cover" /><div><h4 className="text-sm font-semibold text-charcoal">{appointment.title}</h4><span className="mt-1 inline-block rounded bg-cream px-2 py-0.5 text-xs text-charcoal">{appointment.category}</span></div></div></td>
+                    <td className="px-4 py-4 text-xs text-ash"><p className="flex items-center gap-1.5"><CalendarDays className="size-3.5" aria-hidden="true" />{appointment.date}</p><p className="mt-1 flex items-center gap-1.5"><Clock3 className="size-3.5" aria-hidden="true" />{appointment.time}</p></td>
+                    <td className="px-6 py-4 text-right"><span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[appointment.status]}`}>{appointment.status}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
 

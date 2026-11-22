@@ -75,8 +75,8 @@ const MyProfilePage = () => {
         <p className="mt-1 text-sm text-ash">View and update your personal information.</p>
       </div>
 
-      <div className="mt-6 grid items-start gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
-        <aside className="flex h-[330px] w-full max-w-[280px] self-start justify-self-start flex-col items-center justify-center rounded-xl bg-[#f5efec] p-6 text-center">
+      <div className="mt-6 grid items-start gap-5 xl:grid-cols-[280px_minmax(0,1fr)]">
+        <aside className="flex h-[330px] w-full max-w-[280px] self-start justify-self-center flex-col items-center justify-center rounded-xl bg-[#f5efec] p-6 text-center xl:justify-self-start">
           <div className="relative">
             <Avatar className="size-28 border-0">
               {user?.image && <AvatarImage src={user.image} alt={user.name || "User profile"} />}
@@ -90,10 +90,10 @@ const MyProfilePage = () => {
           <p className="mt-1 text-sm text-ash">{user?.email}</p>
         </aside>
 
-        <form key={user?.id || "profile"} onSubmit={handleSubmit} className="flex rounded-xl border border-border bg-card p-5 sm:p-6 xl:min-h-[690px] xl:flex-col">
+        <form key={user?.id || "profile"} onSubmit={handleSubmit} className="flex flex-col rounded-xl border border-border bg-card p-5 sm:p-6 xl:min-h-[690px]">
           <div className="flex items-center gap-2"><UserRound className="size-5 text-charcoal" aria-hidden="true" /><h3 className="text-xl font-semibold text-charcoal">Profile Information</h3></div>
-          <div className="mt-5 grid gap-4 md:grid-cols-2 md:gap-x-5">
-            <label className="block md:col-span-2"><span className="mb-1.5 block text-sm font-semibold text-charcoal">Full Name</span><input name="name" defaultValue={user?.name || ""} required className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm text-charcoal outline-none focus:border-charcoal" /></label>
+          <div className="mt-5 grid gap-4 xl:grid-cols-2 xl:gap-x-5">
+            <label className="block xl:col-span-2"><span className="mb-1.5 block text-sm font-semibold text-charcoal">Full Name</span><input name="name" defaultValue={user?.name || ""} required className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm text-charcoal outline-none focus:border-charcoal" /></label>
             <label className="block"><span className="mb-1.5 block text-sm font-semibold text-charcoal">Email Address</span><input value={user?.email || ""} readOnly className="h-11 w-full cursor-not-allowed rounded-lg border border-border bg-muted px-3 text-sm text-ash outline-none" /></label>
             <label className="block"><span className="mb-1.5 block text-sm font-semibold text-charcoal">Phone Number</span><input name="phone" defaultValue={user?.phone || ""} placeholder="Enter your phone number" className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm text-charcoal outline-none placeholder:text-ash focus:border-charcoal" /></label>
           </div>
@@ -111,7 +111,7 @@ const MyProfilePage = () => {
               </label>
             ))}
           </div>
-          <div className="mt-6 flex justify-end gap-3 xl:mt-auto xl:pt-6"><button type="reset" className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold text-charcoal hover:bg-cream">Cancel</button><button type="submit" disabled={isSaving} className="rounded-lg bg-[#3c2a1d] px-5 py-2.5 text-sm font-semibold text-white hover:bg-charcoal disabled:cursor-not-allowed disabled:opacity-60">{isSaving ? "Updating..." : "Update Profile"}</button></div>
+          <div className="mt-6 flex flex-wrap justify-end gap-3 xl:mt-auto xl:pt-6"><button type="reset" className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold text-charcoal hover:bg-cream">Cancel</button><button type="submit" disabled={isSaving} className="rounded-lg bg-[#3c2a1d] px-5 py-2.5 text-sm font-semibold text-white hover:bg-charcoal disabled:cursor-not-allowed disabled:opacity-60">{isSaving ? "Updating..." : "Update Profile"}</button></div>
         </form>
       </div>
     </section>
