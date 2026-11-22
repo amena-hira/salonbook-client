@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { toast } from "@/components/ui/toast";
+import { updateService } from "@/lib/actions/services";
 
 const normalizeService = (service) => ({
   ...service,
@@ -29,6 +30,7 @@ const ManageServicesClient = ({ initialServices }) => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All Categories");
   const [status, setStatus] = useState("All Statuses");
+  const [updatingId, setUpdatingId] = useState("");
   const categories = [
     "All Categories",
     ...new Set(services.map((service) => service.category)),
@@ -41,12 +43,32 @@ const ManageServicesClient = ({ initialServices }) => {
         (status === "Active" ? service.active : !service.active)),
   );
 
-  const toggleService = (id) =>
-    setServices((current) =>
-      current.map((service) =>
-        service.id === id ? { ...service, active: !service.active } : service,
-      ),
-    );
+  const toggleService = async (service) => {
+    const nextStatus = service.active ? "inactive" : "active";
+    setUpdatingId(service.id);
+
+    try {
+      await updateService(service.id, { status: nextStatus });
+      setServices((current) =>
+        current.map((item) =>
+          item.id === service.id ? { ...item, active: !item.active } : item,
+        ),
+      );
+      toast.add({
+        title: `Service ${nextStatus}`,
+        description: `${service.name} is now ${nextStatus}.`,
+        type: "success",
+      });
+    } catch (error) {
+      toast.add({
+        title: "Unable to update service",
+        description: error.message || "Please try again.",
+        type: "error",
+      });
+    } finally {
+      setUpdatingId("");
+    }
+  };
   const showToast = (title) =>
     toast.add({
       title,
@@ -173,9 +195,10 @@ const ManageServicesClient = ({ initialServices }) => {
                 <td className="px-4 py-3">
                   <button
                     type="button"
-                    onClick={() => toggleService(service.id)}
+                    onClick={() => toggleService(service)}
+                    disabled={updatingId === service.id}
                     aria-label={`Set ${service.name} ${service.active ? "inactive" : "active"}`}
-                    className={`relative h-7 w-12 rounded-full transition-colors ${service.active ? "bg-[#684521]" : "bg-muted"}`}
+                    className={`relative h-7 w-12 rounded-full transition-colors disabled:cursor-wait disabled:opacity-60 ${service.active ? "bg-[#684521]" : "bg-muted"}`}
                   >
                     <span
                       className={`absolute top-1 size-5 rounded-full bg-white transition-transform ${service.active ? "left-6" : "left-1"}`}
@@ -205,7 +228,7 @@ const ManageServicesClient = ({ initialServices }) => {
             ))}
           </tbody>
         </table>
-        {visibleServices.length === 0 && (
+        {services.length === 0 && (
           <p className="px-5 py-10 text-center text-sm text-ash">
             No services found.
           </p>
