@@ -24,10 +24,17 @@ const CreateServiceForm = ({ categories }) => {
       if (!uploadResponse.ok || !upload.success)
         throw new Error("Unable to upload image.");
 
-      const response = await addNewService({
-        ...service,
+      const servicePayload = {
+        serviceName: service.serviceName,
+        category: service.category,
+        description: service.description,
+        price: service.price,
+        duration: service.duration,
         image: upload.data.url,
-      });
+        status: service.status,
+        createdAt: new Date().toISOString(),
+      };
+      const response = await addNewService(servicePayload);
       if (!response.acknowledged) throw new Error("Unable to add service.");
       toast.add({
         title: "Service added",

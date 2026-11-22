@@ -44,6 +44,7 @@ const ServiceForm = ({ categories = [], initialService, isSaving, onSubmit, subm
       image,
       existingImage: initialService?.image,
       status,
+      createdAt: initialService?.createdAt,
     });
   };
 

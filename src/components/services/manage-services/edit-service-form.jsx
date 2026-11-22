@@ -29,7 +29,17 @@ const EditServiceForm = ({ categories, service, serviceId }) => {
         imageUrl = upload.data.url;
       }
 
-      await updateService(serviceId, { ...serviceData, image: imageUrl });
+      const servicePayload = {
+        serviceName: serviceData.serviceName,
+        category: serviceData.category,
+        description: serviceData.description,
+        price: serviceData.price,
+        duration: serviceData.duration,
+        image: imageUrl,
+        status: serviceData.status,
+        createdAt: serviceData.createdAt,
+      };
+      await updateService(serviceId, servicePayload);
       toast.add({ title: "Service updated", description: "The service changes have been saved.", type: "success" });
       router.push("/dashboard/admin/manage-services");
     } catch (error) {
