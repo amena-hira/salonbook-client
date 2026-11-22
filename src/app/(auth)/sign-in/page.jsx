@@ -194,10 +194,6 @@ const SignInContent = () => {
                                         <Eye className="size-5" />
                                     )}
                                 </button>
-                                {/* <Eye
-                                    className="pointer-events-none absolute right-4 top-1/2 size-5 -translate-y-1/2 text-ash"
-                                    aria-hidden="true"
-                                /> */}
                             </span>
                         </label>
 
@@ -211,7 +207,7 @@ const SignInContent = () => {
                                 Remember me
                             </label>
                             <Link
-                                href="/forgot-password"
+                                href="#"
                                 className="font-semibold text-charcoal underline decoration-[#b89462] decoration-2 underline-offset-6 hover:text-ash"
                             >
                                 Forgot password?

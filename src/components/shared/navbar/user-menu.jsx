@@ -30,7 +30,7 @@ const UserMenu = ({ user }) => {
   const handleSignOut = async () => {
     await signOut({
       fetchOptions: {
-        onSuccess: () => router.push("/"),
+        onSuccess: () => router.push("/sign-in"),
       },
     });
   };

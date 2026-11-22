@@ -57,7 +57,7 @@ const DashboardSidebar = () => {
       fetchOptions: {
         onSuccess: () => {
           router.refresh();
-          router.push("/");
+          router.push("/sign-in");
         },
       },
     });
