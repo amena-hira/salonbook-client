@@ -229,21 +229,29 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
                       className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-2 text-xs font-semibold"
                     >
                       <Eye className="size-4" />
-                      View
                     </Link>
                     {item.status === "Pending" ? (
-                      <button
-                        onClick={() => updateStatus(item.id, "Confirmed")}
-                        className="rounded-md bg-[#3c2a1d] px-3 py-2 text-xs font-semibold text-white"
-                      >
-                        Confirm
-                      </button>
+                      <>
+                        <button
+                          onClick={() => updateStatus(item.id, "Confirmed")}
+                          className="rounded-md bg-[#3c2a1d] px-3 py-2 text-xs font-semibold text-white"
+                        >
+                          Confirm
+                        </button>
+                        <button
+                          onClick={() => updateStatus(item.id, "Cancelled")}
+                          className="rounded-md border border-red-300 px-3 py-2 text-xs font-semibold text-destructive"
+                        >
+                          <X className="size-4" />
+
+                        </button>
+                      </>
                     ) : item.status === "Confirmed" ? (
                       <button
                         onClick={() => updateStatus(item.id, "Cancelled")}
                         className="rounded-md border border-red-300 px-3 py-2 text-xs font-semibold text-destructive"
                       >
-                        Cancel
+                        <X className="size-4" />
                       </button>
                     ) : null}
                   </div>
