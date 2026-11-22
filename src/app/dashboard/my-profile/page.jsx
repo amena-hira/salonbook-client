@@ -5,6 +5,13 @@ import { Camera, Eye, EyeOff, LockKeyhole, UserRound } from "lucide-react";
 import { authClient, useSession } from "@/lib/auth-client";
 import { toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { updateProfile } from "@/lib/actions/user";
+
+const passwordIsValid = (password) =>
+  password.length >= 6 && /[A-Z]/.test(password) && /[a-z]/.test(password);
+
+const passwordRulesMessage =
+  "Password must be at least 6 characters and include one uppercase and one lowercase letter.";
 
 const MyProfilePage = () => {
   const { data: session } = useSession();
@@ -13,6 +20,9 @@ const MyProfilePage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const profileImage = imagePreview || user?.image;
   const initials =
     user?.name
       ?.split(" ")
@@ -23,7 +33,8 @@ const MyProfilePage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const currentPassword = String(formData.get("currentPassword") || "");
     const newPassword = String(formData.get("newPassword") || "");
     const confirmPassword = String(formData.get("confirmPassword") || "");
@@ -37,33 +48,28 @@ const MyProfilePage = () => {
       return;
     }
 
+    if (newPassword && !passwordIsValid(newPassword)) {
+      toast.add({
+        title: "Invalid password",
+        description: passwordRulesMessage,
+        type: "error",
+      });
+      return;
+    }
+
+    if (newPassword && !currentPassword) {
+      toast.add({
+        title: "Current password required",
+        description: "Enter your current password to set a new password.",
+        type: "error",
+      });
+      return;
+    }
+
     setIsSaving(true);
 
     try {
-      const { error: profileError } = await authClient.updateUser({
-        name: String(formData.get("name") || ""),
-        phone: String(formData.get("phone") || ""),
-      });
-
-      if (profileError) {
-        toast.add({
-          title: "Profile update failed",
-          description: profileError.message || "Please try again.",
-          type: "error",
-        });
-        return;
-      }
-
       if (newPassword) {
-        if (!currentPassword) {
-          toast.add({
-            title: "Current password required",
-            description: "Enter your current password to set a new password.",
-            type: "error",
-          });
-          return;
-        }
-
         const { error: passwordError } = await authClient.changePassword({
           currentPassword,
           newPassword,
@@ -78,12 +84,40 @@ const MyProfilePage = () => {
         }
       }
 
+      let image = user?.image || "";
+      if (imageFile) {
+        const imageForm = new FormData();
+        imageForm.append("image", imageFile);
+
+        const uploadResponse = await fetch(
+          `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
+          { method: "POST", body: imageForm },
+        );
+        const upload = await uploadResponse.json();
+
+        if (!uploadResponse.ok || !upload.success) {
+          throw new Error("Unable to upload profile photo.");
+        }
+
+        image = upload.data.url;
+      }
+
+      await updateProfile(user?.email, {
+        name: String(formData.get("name") || ""),
+        image,
+        phone: String(formData.get("phone") || ""),
+      });
+
       toast.add({
         title: "Profile updated",
         description: "Your changes have been saved.",
         type: "success",
       });
-      event.currentTarget.reset();
+      form.querySelectorAll('input[type="password"]').forEach((input) => {
+        input.value = "";
+      });
+      setImageFile(null);
+      setImagePreview(image);
     } catch (error) {
       toast.add({
         title: "Profile update failed",
@@ -134,9 +168,9 @@ const MyProfilePage = () => {
         <aside className="flex h-[330px] w-full max-w-[280px] self-start justify-self-center flex-col items-center justify-center rounded-xl bg-[#f5efec] p-6 text-center xl:justify-self-start">
           <div className="relative">
             <Avatar className="size-28 border-0">
-              {user?.image && (
+              {profileImage && (
                 <AvatarImage
-                  src={user.image}
+                  src={profileImage}
                   alt={user.name || "User profile"}
                 />
               )}
@@ -144,20 +178,25 @@ const MyProfilePage = () => {
                 {initials}
               </AvatarFallback>
             </Avatar>
-            <button
-              type="button"
-              onClick={() =>
-                toast.add({
-                  title: "Profile photo",
-                  description: "Photo updates will be available soon.",
-                  type: "info",
-                })
-              }
+            <label
+              htmlFor="profile-image"
               aria-label="Change profile photo"
-              className="absolute bottom-0 right-0 grid size-8 place-items-center rounded-full border-2 border-cream bg-white text-charcoal shadow-sm hover:bg-background"
+              className="absolute bottom-0 right-0 grid size-8 cursor-pointer place-items-center rounded-full border-2 border-cream bg-white text-charcoal shadow-sm hover:bg-background"
             >
               <Camera className="size-4" aria-hidden="true" />
-            </button>
+            </label>
+            <input
+              id="profile-image"
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (!file) return;
+                setImageFile(file);
+                setImagePreview(URL.createObjectURL(file));
+              }}
+            />
           </div>
           <h3 className="mt-4 font-heading text-2xl font-semibold text-charcoal">
             {user?.name || "SalonBook User"}
@@ -194,7 +233,7 @@ const MyProfilePage = () => {
               </span>
               <input
                 value={user?.email || ""}
-                readOnly
+                disabled
                 className="h-11 w-full cursor-not-allowed rounded-lg border border-border bg-muted px-3 text-sm text-ash outline-none"
               />
             </label>
@@ -250,7 +289,10 @@ const MyProfilePage = () => {
                   </button>
                 </span>
               </label>
-            ))}
+          ))}
+          <p className="text-xs text-ash">
+            Minimum 6 characters, one uppercase letter, and one lowercase letter.
+          </p>
           </div>
           <div className="mt-6 flex flex-wrap justify-end gap-3 xl:mt-auto xl:pt-6">
             <button
