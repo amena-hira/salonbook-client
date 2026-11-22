@@ -1,9 +1,47 @@
+"use client";
+
+import { Suspense, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, LockKeyhole, Mail, Scissors } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { authClient } from "@/lib/auth-client";
 
-const SignInPage = () => (
+const SignInContent = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get("redirectTo") ?? "/";
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSignIn = async (event) => {
+        event.preventDefault();
+        setError(null);
+        setIsLoading(true);
+
+        const data = new FormData(event.currentTarget);
+        const { data: signInResponse, error: signInError } = await authClient.signIn.email({
+            email: String(data.get("email") || ""),
+            password: String(data.get("password") || ""),
+            rememberMe: true,
+            callbackURL: redirectTo,
+        });
+
+        console.log("sign in response", signInResponse, signInError);
+
+        if (signInError) {
+            setError(signInError.message || "Unable to sign in. Please try again.");
+            setIsLoading(false);
+            return;
+        }
+
+        router.refresh();
+        router.push(redirectTo);
+        setIsLoading(false);
+    };
+
+    return (
     <main className="grid min-h-screen bg-card lg:h-screen lg:max-h-screen lg:grid-cols-[48%_52%]">
         <section className="relative hidden h-full overflow-hidden lg:block">
             <Image
@@ -51,12 +89,12 @@ const SignInPage = () => (
                     </p>
                 </div>
 
-                <form className="mt-10 space-y-5">
+                <form onSubmit={handleSignIn} className="mt-10 space-y-5">
                     <label className="block">
                         <span className="mb-2 block text-sm font-semibold text-charcoal">Email Address</span>
                         <span className="relative block">
                             <Mail className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-ash" aria-hidden="true" />
-                            <input type="email" name="email" autoComplete="email" placeholder="Enter your email address" className="h-14 w-full rounded-lg border border-border bg-background px-12 text-base text-charcoal outline-none placeholder:text-ash focus:border-charcoal" />
+                            <input type="email" name="email" autoComplete="email" required placeholder="Enter your email address" className="h-14 w-full rounded-lg border border-border bg-background px-12 text-base text-charcoal outline-none placeholder:text-ash focus:border-charcoal" />
                         </span>
                     </label>
 
@@ -64,7 +102,7 @@ const SignInPage = () => (
                         <span className="mb-2 block text-sm font-semibold text-charcoal">Password</span>
                         <span className="relative block">
                             <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-ash" aria-hidden="true" />
-                            <input type="password" name="password" autoComplete="current-password" placeholder="Enter your password" className="h-14 w-full rounded-lg border border-border bg-background px-12 pr-12 text-base text-charcoal outline-none placeholder:text-ash focus:border-charcoal" />
+                            <input type="password" name="password" autoComplete="current-password" required placeholder="Enter your password" className="h-14 w-full rounded-lg border border-border bg-background px-12 pr-12 text-base text-charcoal outline-none placeholder:text-ash focus:border-charcoal" />
                             <Eye className="pointer-events-none absolute right-4 top-1/2 size-5 -translate-y-1/2 text-ash" aria-hidden="true" />
                         </span>
                     </label>
@@ -79,8 +117,10 @@ const SignInPage = () => (
                         </Link>
                     </div>
 
-                    <button type="button" className="h-14 w-full rounded-lg bg-charcoal text-base font-semibold text-white transition-colors hover:bg-charcoal/85">
-                        Sign In
+                    {error && <p role="alert" className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</p>}
+
+                    <button type="submit" disabled={isLoading} className="h-14 w-full rounded-lg bg-charcoal text-base font-semibold text-white transition-colors hover:bg-charcoal/85 disabled:cursor-not-allowed disabled:opacity-60">
+                        {isLoading ? "Signing In..." : "Sign In"}
                     </button>
                 </form>
 
@@ -104,6 +144,13 @@ const SignInPage = () => (
             </div>
         </section>
     </main>
+    );
+};
+
+const SignInPage = () => (
+    <Suspense fallback={<main className="min-h-screen bg-card" />}>
+        <SignInContent />
+    </Suspense>
 );
 
 export default SignInPage;

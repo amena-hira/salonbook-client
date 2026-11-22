@@ -13,16 +13,36 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const UserMenu = () => (
-  <DropdownMenu>
+const UserMenu = ({ user }) => {
+  const initials = user?.name
+    ?.split(" ")
+    .map((name) => name[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase() || "U";
+
+  const handleSignOut = async () => {
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => router.push("/"),
+      },
+    });
+  }
+
+  return (
+    <DropdownMenu>
     <DropdownMenuTrigger
       aria-label="Open user menu"
       className="flex items-center rounded-full outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-cream sm:gap-2"
     >
-      <span className="flex size-10 items-center justify-center rounded-full bg-[#c9aa95] font-heading text-sm font-semibold text-charcoal">
-        SA
-      </span>
+      <Avatar className="size-10 border border-cream/40">
+        {user?.image && <AvatarImage src={user.image} alt={user.name || "User profile"} />}
+        <AvatarFallback className="bg-[#c9aa95] font-heading font-semibold text-charcoal">
+          {initials}
+        </AvatarFallback>
+      </Avatar>
       <ChevronDown className="hidden size-5 text-white sm:block" aria-hidden="true" />
     </DropdownMenuTrigger>
     <DropdownMenuContent
@@ -31,8 +51,8 @@ const UserMenu = () => (
       className="w-72 rounded-xl bg-white p-4 text-charcoal shadow-xl"
     >
       <div className="px-3 pb-4 pt-1">
-        <p className="text-lg font-semibold">Sarah Ahmed</p>
-        <p className="text-sm text-ash">sarah.ahmed@example.com</p>
+        <p className="text-lg font-semibold">{user?.name || "SalonBook User"}</p>
+        <p className="text-sm text-ash">{user?.email}</p>
       </div>
       <DropdownMenuSeparator className="mx-1 my-0 bg-[#e5e2dd]" />
       <div className="py-2">
@@ -49,12 +69,14 @@ const UserMenu = () => (
       <DropdownMenuItem
         variant="destructive"
         className="mt-2 cursor-pointer gap-4 rounded-lg px-3 py-2.5 text-base font-medium"
+        onClick={handleSignOut}
       >
         <LogOut className="size-5" />
         Sign Out
       </DropdownMenuItem>
     </DropdownMenuContent>
-  </DropdownMenu>
-);
+    </DropdownMenu>
+  );
+};
 
 export default UserMenu;
