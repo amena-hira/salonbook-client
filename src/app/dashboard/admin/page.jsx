@@ -116,7 +116,7 @@ const AdminDashboardPage = () => (
             Quick Actions
           </h3>
           <div className="mt-4 flex flex-wrap gap-3">
-            <Link href="/dashboard/admin/services" className="inline-flex items-center gap-2 rounded-lg bg-[#3c2a1d] px-2 py-2.5 text-sm font-semibold text-white hover:bg-charcoal">
+            <Link href="/dashboard/admin/manage-services" className="inline-flex items-center gap-2 rounded-lg bg-[#3c2a1d] px-2 py-2.5 text-sm font-semibold text-white hover:bg-charcoal">
               <Plus className="size-4" />
               Add Service</Link>
             <Link href="/dashboard/admin/categories" className="inline-flex items-center gap-2 rounded-lg border border-border px-2 py-2.5 text-sm font-semibold text-charcoal hover:bg-cream">

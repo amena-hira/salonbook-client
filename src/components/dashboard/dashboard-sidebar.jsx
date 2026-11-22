@@ -37,7 +37,7 @@ const customerLinks = [
 
 const adminLinks = [
   { label: "Dashboard", href: "/dashboard/admin", icon: Home },
-  { label: "Services", href: "/dashboard/admin/services", icon: Wrench },
+  { label: "Services", href: "/dashboard/admin/manage-services", icon: Wrench },
   { label: "Categories", href: "/dashboard/admin/categories", icon: Grid2X2 },
   { label: "Appointment Requests", href: "/dashboard/admin/appointments", icon: CalendarDays },
   { label: "Customers", href: "/dashboard/admin/customers", icon: UsersRound },
