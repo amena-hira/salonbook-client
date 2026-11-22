@@ -68,32 +68,35 @@ const BookAppointmentModal = ({ service, className }) => {
 
     const appointment = {
       serviceId,
-      customerEmail: session?.user?.email,
+      customerId: session?.user?.email,
       appointmentDate: date,
       timeSlot: time,
       message,
       servicePrice: service?.price,
-      appointmentStatus: "Pending",
-      paymentStatus: "Unpaid",
-      createdAt: new Date(),
-      updatedAt: new Date()
+      paymentStatus: "unpaid",
+      status: "pending",
+      createdAt: new Date().toISOString(),
     };
 
-    console.log("Appointment request", appointment);
+    try {
+      const response = await addNewAppointment(appointment);
+      if (!response.acknowledged) throw new Error("Unable to add appointment.");
 
-    const response = await addNewAppointment(appointment);
-
-    if (!response.acknowledged) throw new Error("Unable to add appointment.");
-
-    toast.add({
-      title: `Appointment request sent for ${serviceName}`,
-      description:
-        "Your appointment is pending confirmation and payment is unpaid.",
-      type: "success",
-    });
-    setOpen(false);
-    setTime("");
-    setMessage("");
+      toast.add({
+        title: `Appointment request sent for ${serviceName}`,
+        description: "Your appointment is pending confirmation and payment is unpaid.",
+        type: "success",
+      });
+      setOpen(false);
+      setTime("");
+      setMessage("");
+    } catch (error) {
+      toast.add({
+        title: "Unable to book appointment",
+        description: error.message || "Please try again.",
+        type: "error",
+      });
+    }
   };
 
   return (
