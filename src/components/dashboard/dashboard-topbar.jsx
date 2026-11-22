@@ -1,7 +1,7 @@
 "use client";
 
 import { Bell, ChevronDown } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signOut, useSession } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const DashboardTopbar = () => {
-  const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
   const user = session?.user;
@@ -24,7 +23,7 @@ const DashboardTopbar = () => {
     .join("")
     .slice(0, 2)
     .toUpperCase() || "U";
-  const title = pathname.startsWith("/dashboard/customer") ? "Overview" : "Dashboard";
+  const title = "SalonBook";
 
   const handleSignOut = async () => {
     await signOut({

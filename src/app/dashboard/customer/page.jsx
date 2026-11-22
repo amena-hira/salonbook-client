@@ -52,7 +52,7 @@ const CustomerDashboardPage = () => {
         <section className="overflow-hidden rounded-2xl border border-border bg-card">
           <div className="flex items-center justify-between border-b border-border px-6 py-5">
             <h3 className="flex items-center gap-3 font-heading text-2xl font-semibold text-charcoal"><CalendarDays className="size-6" aria-hidden="true" />Recent Appointments</h3>
-            <Link href="/dashboard/customer/appointments" className="inline-flex items-center gap-2 text-sm font-semibold text-charcoal hover:text-ash">View All <ArrowRight className="size-4" aria-hidden="true" /></Link>
+            <Link href="/dashboard/customer/my-appointments" className="inline-flex items-center gap-2 text-sm font-semibold text-charcoal hover:text-ash">View All <ArrowRight className="size-4" aria-hidden="true" /></Link>
           </div>
           <div className="px-6">
             {appointments.map((appointment, index) => (
