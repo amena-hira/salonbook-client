@@ -14,10 +14,13 @@ import {
 import { toast } from "@/components/ui/toast";
 import { updateService } from "@/lib/actions/services";
 
+const DEFAULT_SERVICE_IMAGE = "/images/services/brushing.jpg";
+
 const normalizeService = (service) => ({
   ...service,
   id: service._id || service.id,
   name: service.serviceName || service.name,
+  image: service.image || service.imageUrl || service.serviceImage || DEFAULT_SERVICE_IMAGE,
   active: service.status
     ? service.status === "active"
     : (service.isActive ?? true),
@@ -132,7 +135,16 @@ const ManageServicesClient = ({ initialServices }) => {
         </label>
       </div>
       <div className="mt-7 overflow-x-auto rounded-xl border border-border bg-card">
-        <table className="w-full min-w-[1000px] text-left">
+        <table className="w-full min-w-[1050px] table-fixed text-left">
+          <colgroup>
+            <col className="w-[28%]" />
+            <col className="w-[16%]" />
+            <col className="w-[10%]" />
+            <col className="w-[11%]" />
+            <col className="w-[11%]" />
+            <col className="w-[12%]" />
+            <col className="w-[12%]" />
+          </colgroup>
           <thead className="border-b border-border bg-cream/50 text-xs text-charcoal">
             <tr>
               {[
@@ -161,12 +173,17 @@ const ManageServicesClient = ({ initialServices }) => {
               >
                 <td className="px-5 py-3">
                   <div className="flex items-center gap-3">
-                    <img
-                      src={service.image}
-                      alt={service.name}
-                      className="size-14 rounded-lg object-cover"
-                    />
-                    <span className="text-sm font-semibold text-charcoal">
+                    <span className="size-14 shrink-0 overflow-hidden rounded-lg bg-cream">
+                      <img
+                        src={service.image}
+                        alt=""
+                        onError={(event) => {
+                          event.currentTarget.src = DEFAULT_SERVICE_IMAGE;
+                        }}
+                        className="size-full object-cover"
+                      />
+                    </span>
+                    <span className="min-w-0 truncate text-sm font-semibold text-charcoal">
                       {service.name}
                     </span>
                   </div>
