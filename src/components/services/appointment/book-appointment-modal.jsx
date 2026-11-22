@@ -86,7 +86,7 @@ const BookAppointmentModal = ({ service, className }) => {
     if (!response.acknowledged) throw new Error("Unable to add appointment.");
 
     toast.add({
-      title: "Appointment request sent",
+      title: `Appointment request sent for ${serviceName}`,
       description:
         "Your appointment is pending confirmation and payment is unpaid.",
       type: "success",
