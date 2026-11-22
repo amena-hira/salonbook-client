@@ -20,15 +20,6 @@ export const getMyAppointments = async (customerEmail) => {
   return await res.json();
 };
 
-// Admin part
-export const getAppointments = async () => {
-  const res = await fetch(`${BASE_URL}/appointments`, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error("Unable to load appointments");
-  }
-  return await res.json();
-};
-
 export const cancelMyAppointment = async (appointmentId, email) => {
   const res = await protectedMutation(
     `${BASE_URL}/my-appointments/${appointmentId}`,
@@ -37,6 +28,15 @@ export const cancelMyAppointment = async (appointmentId, email) => {
   );
   if (!res.ok) throw new Error("Unable to cancel appointment");
   return res.json();
+};
+
+// Admin part
+export const getAppointments = async () => {
+  const res = await fetch(`${BASE_URL}/appointments`, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error("Unable to load appointments");
+  }
+  return await res.json();
 };
 
 export const updateAppointment = async (appointmentId, data) => {
