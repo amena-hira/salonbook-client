@@ -41,6 +41,19 @@ export const getAppointments = async () => {
   return await res.json();
 };
 
+export const getAppointmentById = async (appointmentId) => {
+  const res = await fetch(`${BASE_URL}/appointments/${appointmentId}`, {
+    cache: "no-store",
+  });
+  const result = await res.json();
+
+  if (!res.ok) {
+    throw new Error(result.message || "Unable to load appointment");
+  }
+
+  return result;
+};
+
 export const updateAppointment = async (appointmentId, data) => {
   const res = await protectedMutation(
     `${BASE_URL}/appointments/${appointmentId}`,

@@ -185,21 +185,13 @@ const MyAppointmentsClient = ({ customerId, initialAppointments }) => {
                         {cancellingId === appointment.id ? "Cancelling..." : "Cancel"}
                       </button>
                     )}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        toast.add({
-                          title: appointment.title,
-                          description:
-                            "Appointment details will be available here.",
-                          type: "info",
-                        })
-                      }
+                    <Link
+                      href={`/dashboard/customer/my-appointments/${appointment.id}`}
                       className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-xs font-semibold text-charcoal"
                     >
                       <Eye className="size-3.5" />
                       Details
-                    </button>
+                    </Link>
                   </div>
                 </td>
               </tr>
