@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import EditServiceForm from "@/components/services/manage-services/edit-service-form";
-import { getCategories, getService } from "@/lib/actions/services";
+import { getCategories, getService } from "@/lib/api/services";
 
 const EditServicePage = async ({ params }) => {
   const { id } = await params;

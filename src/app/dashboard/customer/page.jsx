@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, CalendarDays, Check, CircleX, Clock3 } from "lucide-react";
 import { auth } from "@/lib/auth";
-import { getMyAppointments } from "@/lib/actions/appointments";
+import { getMyAppointments } from "@/lib/api/appointments";
 
 const statusStyles = {
   Confirmed: "bg-[#e7f6e7] text-[#258235]",

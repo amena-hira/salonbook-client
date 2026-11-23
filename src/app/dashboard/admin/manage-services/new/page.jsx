@@ -1,6 +1,6 @@
 import Link from "next/link";
 import CreateServiceForm from "@/components/services/manage-services/create-service-form";
-import { getCategories } from "@/lib/actions/services";
+import { getCategories } from "@/lib/api/services";
 
 const AddServicePage = async () => {
   let categories = [];

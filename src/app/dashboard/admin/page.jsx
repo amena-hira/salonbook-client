@@ -12,8 +12,8 @@ import {
   UsersRound,
   Zap,
 } from "lucide-react";
-import { getAppointments } from "@/lib/actions/appointments";
-import { getAdminDashboardStats } from "@/lib/actions/dashboard";
+import { getAppointments } from "@/lib/api/appointments";
+import { getAdminDashboardStats } from "@/lib/api/dashboard";
 
 const getItems = (result) =>
   Array.isArray(result)

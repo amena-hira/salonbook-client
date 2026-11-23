@@ -26,10 +26,10 @@ export async function POST(request) {
 
     const origin = headersList.get('origin') || new URL(request.url).origin
     const appointmentQuery = appointmentId
-      ? `&appointmentId=${encodeURIComponent(appointmentId)}`
+      ? `&appointmentId=${appointmentId}`
       : ''
-    const successUrl = `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&service=${encodeURIComponent(service)}&price=${encodeURIComponent(price.toFixed(2))}${appointmentQuery}`
-    const cancelUrl = `${origin}/checkout/cancel?service=${encodeURIComponent(service)}&price=${encodeURIComponent(price.toFixed(2))}${appointmentQuery}`
+    const successUrl = `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&service=${service}&price=${price.toFixed(2)}${appointmentQuery}`
+    const cancelUrl = `${origin}/checkout/cancel?service=${service}&price=${price.toFixed(2)}${appointmentQuery}`
 
     const session = await stripe.checkout.sessions.create({
       line_items: [

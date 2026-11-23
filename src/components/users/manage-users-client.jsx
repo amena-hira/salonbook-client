@@ -13,7 +13,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { toast } from "@/components/ui/toast";
-import { updateUserBlockStatus } from "@/lib/actions/user";
+import { updateUserBlockStatus } from "@/lib/api/user";
 
 const isBlocked = (value) => value === true || value === "true";
 

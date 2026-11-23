@@ -8,7 +8,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { stripe } from "@/lib/stripe";
-import { verifyCheckoutPayment } from "@/lib/actions/transactions";
+import { verifyCheckoutPayment } from "@/lib/actions/payments";
 
 const getValue = (value, fallback) =>
   Array.isArray(value) ? value[0] || fallback : value || fallback;

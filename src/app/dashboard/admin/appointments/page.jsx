@@ -1,5 +1,5 @@
 import AdminAppointmentsClient from "@/components/appointments/admin-appointments-client";
-import { getAppointments } from "@/lib/actions/appointments";
+import { getAppointments } from "@/lib/api/appointments";
 
 const AdminAppointmentsPage = async () => {
   let appointments = [];

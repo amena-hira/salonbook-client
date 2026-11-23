@@ -1,15 +1,16 @@
+"use server";
+
+import { authFetch } from "@/lib/core/server";
+
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
+// Admin API: load dashboard statistics.
 export const getAdminDashboardStats = async () => {
-  const res = await fetch(`${BASE_URL}/admin/dashboard-stats`, {
-    cache: "no-store",
-  });
+  const res = await authFetch(`${BASE_URL}/admin/dashboard-stats`);
   const result = await res.json();
-
   if (!res.ok) {
     throw new Error(result.message || "Unable to load dashboard statistics");
   }
-
   return result;
 };

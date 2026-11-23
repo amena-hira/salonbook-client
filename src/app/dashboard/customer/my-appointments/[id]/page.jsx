@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import AppointmentDetails from "@/components/appointments/appointment-details";
 import { auth } from "@/lib/auth";
-import { getAppointmentById } from "@/lib/actions/appointments";
+import { getAppointmentById } from "@/lib/api/appointments";
 
 const MyAppointmentDetailsPage = async ({ params }) => {
   const { id } = await params;

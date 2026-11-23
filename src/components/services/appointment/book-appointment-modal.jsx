@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useSession } from "@/lib/auth-client";
-import { addNewAppointment, getAppointments } from "@/lib/actions/appointments";
+import { addNewAppointment, getAppointments } from "@/lib/api/appointments";
 
 const timeSlots = [
   "10:00 AM",

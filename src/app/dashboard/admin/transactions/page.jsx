@@ -1,5 +1,5 @@
 import AdminTransactionsClient from "@/components/transactions/admin-transactions-client";
-import { getTransactions } from "@/lib/actions/transactions";
+import { getTransactions } from "@/lib/api/transactions";
 
 const TransactionsPage = async () => {
   let transactions = [];

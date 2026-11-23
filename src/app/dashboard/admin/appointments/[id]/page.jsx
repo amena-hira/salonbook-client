@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import AppointmentDetails from "@/components/appointments/appointment-details";
-import { getAppointmentById } from "@/lib/actions/appointments";
+import { getAppointmentById } from "@/lib/api/appointments";
 
 const AppointmentDetailsPage = async ({ params }) => {
   const { id } = await params;

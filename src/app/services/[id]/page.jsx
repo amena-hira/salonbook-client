@@ -10,7 +10,7 @@ import {
   Layers3,
   Tag,
 } from "lucide-react";
-import { getServiceById } from "@/lib/actions/services";
+import { getServiceById } from "@/lib/api/services";
 import BookAppointmentModal from "@/components/services/appointment/book-appointment-modal";
 
 const ServiceDetailsPage = async ({ params }) => {

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Flower2, Hand, Paintbrush, Scissors, Sparkles, SprayCan, Waves } from "lucide-react";
-import { getCategories } from "@/lib/actions/services";
+import { getCategories } from "@/lib/api/services";
 
 const categoryVisuals = {
     "haircut-styling": { image: "/images/services/man-hair-cut.jpg", icon: Scissors },
@@ -41,7 +41,7 @@ const ServiceCategory = async () => {
                             return (
                                 <Link
                                     key={category._id}
-                                    href={`/services?category=${encodeURIComponent(category.name)}`}
+                                    href={`/services?category=${category.name}`}
                                     className="group relative min-h-48 overflow-hidden rounded-lg bg-charcoal"
                                 >
                                     <Image

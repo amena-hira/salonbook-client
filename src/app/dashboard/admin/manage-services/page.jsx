@@ -1,5 +1,5 @@
 import ManageServicesClient from "@/components/services/manage-services/manage-services-client";
-import { getAllServices, getCategories } from "@/lib/actions/services";
+import { getAllServices, getCategories } from "@/lib/api/services";
 
 const ManageServicesPage = async () => {
   let services = [];

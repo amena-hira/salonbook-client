@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "@/components/ui/toast";
-import { updateAppointment } from "@/lib/actions/appointments";
+import { updateAppointment } from "@/lib/api/appointments";
 
 const normalizeAppointment = (appointment) => ({
   id: appointment._id,

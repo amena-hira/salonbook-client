@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, CircleX, Clock3, CreditCard, DollarSign, Eye } from "lucide-react";
 import { toast } from "@/components/ui/toast";
-import { cancelMyAppointment } from "@/lib/actions/appointments";
+import { cancelMyAppointment } from "@/lib/api/appointments";
 
 const formatStatus = (status) => `${status}`.charAt(0).toUpperCase() + `${status}`.slice(1).toLowerCase();
 

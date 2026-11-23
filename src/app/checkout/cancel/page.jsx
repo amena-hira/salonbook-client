@@ -10,7 +10,7 @@ const CheckoutCancelPage = async ({ searchParams }) => {
   const appointmentId = getValue(query.appointmentId, "");
   const price = getValue(query.price, "");
   const checkoutHref = appointmentId
-    ? `/checkout?appointmentId=${appointmentId}&service=${encodeURIComponent(service)}&price=${price}`
+    ? `/checkout?appointmentId=${appointmentId}&service=${service}&price=${price}`
     : "/dashboard/customer/my-appointments";
 
   return (

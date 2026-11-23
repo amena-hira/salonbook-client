@@ -1,6 +1,6 @@
 import Image from "next/image";
 import ServicesCatalog from "@/components/services/services-catalog";
-import { getCategories, getServices } from "@/lib/actions/services";
+import { getCategories, getServices } from "@/lib/api/services";
 
 const ServicesPage = async ({ searchParams }) => {
     const search = await searchParams;

@@ -5,7 +5,7 @@ import { Camera, Eye, EyeOff, LockKeyhole, UserRound } from "lucide-react";
 import { authClient, useSession } from "@/lib/auth-client";
 import { toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { updateProfile } from "@/lib/actions/user";
+import { updateProfile } from "@/lib/api/user";
 
 const passwordIsValid = (password) =>
   password.length >= 6 && /[A-Z]/.test(password) && /[a-z]/.test(password);

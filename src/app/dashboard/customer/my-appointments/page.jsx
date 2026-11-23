@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import MyAppointmentsClient from "@/components/appointments/my-appointments-client";
 import { auth } from "@/lib/auth";
-import { getMyAppointments } from "@/lib/actions/appointments";
+import { getMyAppointments } from "@/lib/api/appointments";
 
 const MyAppointmentsPage = async () => {
   const session = await auth.api.getSession({ headers: await headers() });

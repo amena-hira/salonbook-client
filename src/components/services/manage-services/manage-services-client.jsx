@@ -15,7 +15,7 @@ import {
   deleteService,
   getServices,
   updateService,
-} from "@/lib/actions/services";
+} from "@/lib/api/services";
 import DeleteServiceDialog from "@/components/services/manage-services/delete-service-dialog";
 
 const DEFAULT_SERVICE_IMAGE = "/images/services/brushing.jpg";

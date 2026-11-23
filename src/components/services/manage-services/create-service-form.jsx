@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ServiceForm from "@/components/services/manage-services/service-form";
 import { toast } from "@/components/ui/toast";
-import { addNewService } from "@/lib/actions/services";
+import { addNewService } from "@/lib/api/services";
 
 const CreateServiceForm = ({ categories }) => {
   const router = useRouter();

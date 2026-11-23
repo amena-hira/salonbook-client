@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import EmptyServices from "@/components/services/empty-services";
 import ServiceCard from "@/components/services/service-card";
-import { getServices } from "@/lib/actions/services";
+import { getServices } from "@/lib/api/services";
 
 const BrowseService = async () => {
     let services = [];

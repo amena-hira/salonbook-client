@@ -1,5 +1,5 @@
 import ManageUsersClient from "@/components/users/manage-users-client";
-import { getUsers } from "@/lib/actions/user";
+import { getUsers } from "@/lib/api/user";
 
 const ManageUsersPage = async () => {
   let users = [];
