@@ -49,7 +49,7 @@ const SignUpPage = () => {
             const formData = new FormData();
             formData.append("image", file);
 
-            const imgbbApi = `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`;
+            const imgbbApi = `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`;
             const response = await fetch(imgbbApi, {
                 method: "POST",
                 body: formData,
