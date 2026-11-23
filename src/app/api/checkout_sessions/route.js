@@ -36,7 +36,10 @@ export async function POST(request) {
         {
           price_data: {
             currency: 'usd',
-            product_data: { name: service },
+            product_data: {
+              name: 'SalonBook',
+              description: `${service} appointment payment`,
+            },
             unit_amount: unitAmount,
           },
           quantity: 1,
