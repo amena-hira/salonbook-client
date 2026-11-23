@@ -22,12 +22,24 @@ export async function proxy(request) {
   }
 
   const { pathname } = request.nextUrl;
+  const dashboardPath =
+    user.role === "admin"
+      ? "/dashboard/admin"
+      : user.role === "customer"
+        ? "/dashboard/customer"
+        : "/";
+
+  // Both roles: send the signed-in user to the correct dashboard.
+  if (pathname === "/dashboard") {
+    return NextResponse.redirect(new URL(dashboardPath, request.url));
+  }
+
   if (pathname.startsWith("/dashboard/admin") && user.role !== "admin") {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL(dashboardPath, request.url));
   }
 
   if (pathname.startsWith("/dashboard/customer") && user.role !== "customer") {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL(dashboardPath, request.url));
   }
 
   return NextResponse.next();
@@ -37,6 +49,7 @@ export const config = {
   matcher: [
     "/services/:id",
     "/checkout/:path*",
+    "/dashboard",
     "/dashboard/:path*",
   ],
 };

@@ -12,7 +12,8 @@ import { toast } from "@/components/ui/toast";
 const SignInContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const redirectTo = searchParams.get("redirectTo") ?? "/";
+    // Service-details requests provide redirectTo; normal sign-in goes to the role dashboard.
+    const redirectTo = searchParams.get("redirectTo") ?? "/dashboard";
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 

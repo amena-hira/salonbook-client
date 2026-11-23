@@ -104,7 +104,7 @@ const SignUpPage = () => {
                 name: String(data.get("name") || ""),
                 email: String(data.get("email") || ""),
                 password,
-                callbackURL: "/",
+                callbackURL: "/dashboard/customer",
                 image: imageUrl || undefined,
             });
 
@@ -124,7 +124,7 @@ const SignUpPage = () => {
                 type: "success",
             });
             router.refresh();
-            router.push("/");
+            router.push("/dashboard/customer");
         } catch (requestError) {
             toast.add({
                 title: "Registration failed",
@@ -141,7 +141,7 @@ const SignUpPage = () => {
         try {
             const { error: signUpError } = await authClient.signIn.social({
                 provider: "google",
-                callbackURL: "/",
+                callbackURL: "/dashboard/customer",
             });
 
             if (signUpError) {
