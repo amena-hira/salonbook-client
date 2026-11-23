@@ -5,7 +5,7 @@ import { auth } from '@/lib/auth';
 
 
 
-export async function POST() {
+export async function POST(request) {
   try {
     const headersList = await headers()
     const userSession = await auth.api.getSession({ headers: headersList })
@@ -14,14 +14,31 @@ export async function POST() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const origin = headersList.get('origin')
+    const formData = await request.formData()
+    const service = String(formData.get('service') || 'Salon appointment').trim()
+    const appointmentId = String(formData.get('appointmentId') || '')
+    const price = Number(formData.get('price'))
+    const unitAmount = Math.round(price * 100)
 
-    // Create Checkout Sessions from body params.
+    if (!Number.isFinite(unitAmount) || unitAmount <= 0) {
+      return NextResponse.json({ error: "Invalid service price" }, { status: 400 })
+    }
+
+    const origin = headersList.get('origin') || new URL(request.url).origin
+    const successUrl = new URL('/checkout/success', origin)
+    successUrl.searchParams.set('session_id', '{CHECKOUT_SESSION_ID}')
+    successUrl.searchParams.set('service', service)
+    successUrl.searchParams.set('price', price.toFixed(2))
+    if (appointmentId) successUrl.searchParams.set('appointmentId', appointmentId)
+
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
-          // Provide the exact Price ID (for example, price_1234) of the product you want to sell
-          price: "price_1Uel4XHpiOjbroQrV2hiVxDh",
+          price_data: {
+            currency: 'usd',
+            product_data: { name: service },
+            unit_amount: unitAmount,
+          },
           quantity: 1,
         },
       ],
@@ -29,8 +46,9 @@ export async function POST() {
       customer_email: userSession?.user.email,
       metadata: {
         userId: userSession?.user.id ?? null,
+        appointmentId,
       },
-      success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: successUrl.toString(),
       // Provide a name (for example, hosted_web_0001) to label this Checkout integration and measure its conversion independently
       integration_identifier: "salon_book_web_001",
     });

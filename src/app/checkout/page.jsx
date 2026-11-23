@@ -17,8 +17,17 @@ const CheckoutPage = async ({ searchParams }) => {
   const service = getValue(query.service, "Salon appointment");
   const appointmentDate = getValue(query.date, "Date will be confirmed");
   const appointmentTime = getValue(query.time, "Time will be confirmed");
+  const appointmentId = getValue(query.appointmentId, "");
   const amount = Number(getValue(query.price, "0"));
   const total = Number.isFinite(amount) ? amount : 0;
+
+  const { canceled } = query
+
+  if (canceled) {
+    console.log(
+      "Order canceled -- continue to shop around and check out when you're ready."
+    )
+  }
 
   return (
     <main className="min-h-screen bg-[#f8f4f1] text-charcoal">
@@ -102,6 +111,9 @@ const CheckoutPage = async ({ searchParams }) => {
                 your payment. SalonBook does not store your card details.
               </p>
               <form action="/api/checkout_sessions" method="POST">
+                <input type="hidden" name="appointmentId" value={appointmentId} />
+                <input type="hidden" name="service" value={service} />
+                <input type="hidden" name="price" value={total} />
                 <button
                   type="submit"
                   className="mt-6 inline-flex h-13 w-full items-center justify-center gap-2 rounded-lg bg-[#4c3019] px-5 text-base font-semibold text-white transition-colors hover:bg-[#684521]"
