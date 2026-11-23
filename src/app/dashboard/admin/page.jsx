@@ -13,9 +13,7 @@ import {
   Zap,
 } from "lucide-react";
 import { getAppointments } from "@/lib/actions/appointments";
-import { getAllServices } from "@/lib/actions/services";
-import { getTransactions } from "@/lib/actions/transactions";
-import { getUsers } from "@/lib/actions/user";
+import { getAdminDashboardStats } from "@/lib/actions/dashboard";
 
 const getItems = (result) =>
   Array.isArray(result)
@@ -29,38 +27,18 @@ const getItems = (result) =>
 const getInitial = (name) => name?.charAt(0).toUpperCase() || "U";
 
 const AdminDashboardPage = async () => {
-  const [usersResult, servicesResult, appointmentsResult, transactionsResult] =
-    await Promise.allSettled([
-      getUsers(),
-      getAllServices(),
-      getAppointments(),
-      getTransactions(),
-    ]);
+  const [statsResult, appointmentsResult] = await Promise.allSettled([
+    getAdminDashboardStats(),
+    getAppointments(),
+  ]);
 
-  const users =
-    usersResult.status === "fulfilled" ? getItems(usersResult.value) : [];
-  const services =
-    servicesResult.status === "fulfilled" ? getItems(servicesResult.value) : [];
+  const statsData = statsResult.status === "fulfilled" ? statsResult.value : {};
   const appointments =
     appointmentsResult.status === "fulfilled"
       ? getItems(appointmentsResult.value)
       : [];
-  const transactions =
-    transactionsResult.status === "fulfilled"
-      ? getItems(transactionsResult.value)
-      : [];
-  const customers = users.filter((user) => user.role === "customer");
-  const activeServices = services.filter(
-    (service) => service.status === "active",
-  );
   const pendingAppointments = appointments.filter(
     (appointment) => appointment.status === "Pending",
-  );
-  const confirmedAppointments = appointments.filter(
-    (appointment) => appointment.status === "Confirmed",
-  );
-  const paidTransactions = transactions.filter(
-    (transaction) => transaction.status === "Paid",
   );
   const recentRequests = [...appointments]
     .sort(
@@ -71,37 +49,37 @@ const AdminDashboardPage = async () => {
   const stats = [
     [
       "Total Registered Customers",
-      customers.length,
+      statsData.totalCustomers || 0,
       UsersRound,
       "bg-violet-100 text-violet-600",
     ],
     [
       "Total Active Services",
-      activeServices.length,
+      statsData.totalActiveServices || 0,
       Scissors,
       "bg-green-100 text-green-600",
     ],
     [
       "Total Appointment Requests",
-      appointments.length,
+      statsData.totalAppointments || 0,
       CalendarDays,
       "bg-sky-100 text-sky-600",
     ],
     [
       "Pending Appointments",
-      pendingAppointments.length,
+      statsData.pendingAppointments || 0,
       Hourglass,
       "bg-amber-100 text-amber-600",
     ],
     [
       "Confirmed Appointments",
-      confirmedAppointments.length,
+      statsData.confirmedAppointments || 0,
       Check,
       "bg-green-100 text-green-600",
     ],
     [
       "Total Successful Payments",
-      paidTransactions.length,
+      statsData.successfulPayments || 0,
       CreditCard,
       "bg-violet-100 text-violet-600",
     ],
