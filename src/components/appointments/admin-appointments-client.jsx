@@ -245,7 +245,7 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
                     >
                       <Eye className="size-4" />
                     </Link>
-                    {item.status === "Pending" ? (
+                    {item.payment !== "Paid" && item.status === "Pending" ? (
                       <>
                         <button
                           disabled={updatingId === item.id}
@@ -262,7 +262,7 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
                           <X className="size-4" />
                         </button>
                       </>
-                    ) : item.status === "Confirmed" ? (
+                    ) : item.payment !== "Paid" && item.status === "Confirmed" ? (
                       <button
                         disabled={updatingId === item.id}
                         onClick={() => updateStatus(item.id, "Cancelled")}

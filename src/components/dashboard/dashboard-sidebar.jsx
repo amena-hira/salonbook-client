@@ -82,7 +82,7 @@ const DashboardSidebar = () => {
               {links.map(({ label, href, icon: Icon }) => (
                 <SidebarMenuItem key={href}>
                   <SidebarMenuButton
-                    render={<Link href={href} />}
+                    render={<Link href={href} prefetch={false} />}
                     isActive={pathname === href}
                     tooltip={label}
                     className="h-11 gap-3 rounded-lg px-3 text-sm font-medium text-white hover:bg-white/10 hover:text-white data-active:bg-[#fff5f0] data-active:text-charcoal"
