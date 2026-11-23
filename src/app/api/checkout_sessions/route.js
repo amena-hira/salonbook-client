@@ -25,11 +25,10 @@ export async function POST(request) {
     }
 
     const origin = headersList.get('origin') || new URL(request.url).origin
-    const successUrl = new URL('/checkout/success', origin)
-    successUrl.searchParams.set('session_id', '{CHECKOUT_SESSION_ID}')
-    successUrl.searchParams.set('service', service)
-    successUrl.searchParams.set('price', price.toFixed(2))
-    if (appointmentId) successUrl.searchParams.set('appointmentId', appointmentId)
+    const appointmentQuery = appointmentId
+      ? `&appointmentId=${encodeURIComponent(appointmentId)}`
+      : ''
+    const successUrl = `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&service=${encodeURIComponent(service)}&price=${encodeURIComponent(price.toFixed(2))}${appointmentQuery}`
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -48,10 +47,10 @@ export async function POST(request) {
       mode: "payment",
       customer_email: userSession?.user.email,
       metadata: {
-        userId: userSession?.user.id ?? null,
+        customerId: userSession.user.id,
         appointmentId,
       },
-      success_url: successUrl.toString(),
+      success_url: successUrl,
       // Provide a name (for example, hosted_web_0001) to label this Checkout integration and measure its conversion independently
       integration_identifier: "salon_book_web_001",
     });

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 import {
   ArrowRight,
   Check,
@@ -6,15 +7,26 @@ import {
   Scissors,
   ShieldCheck,
 } from "lucide-react";
+import { verifyCheckoutPayment } from "@/lib/actions/transactions";
 
 const getValue = (value, fallback) =>
   Array.isArray(value) ? value[0] || fallback : value || fallback;
 
 const CheckoutSuccessPage = async ({ searchParams }) => {
   const query = await searchParams;
+  const sessionId = getValue(query.session_id, "");
+
+  if (!sessionId) notFound();
+
+  try {
+    await verifyCheckoutPayment(sessionId);
+  } catch {
+    redirect("/checkout?canceled=1");
+  }
+
   const service = getValue(query.service, "Salon appointment");
   const appointmentId = getValue(query.appointmentId, "—");
-  const transactionId = getValue(query.transactionId, "Available in your receipt");
+  const transactionId = getValue(query.transactionId, sessionId);
   const amount = Number(getValue(query.price, "0"));
   const total = Number.isFinite(amount) ? amount : 0;
   const paymentDate = new Intl.DateTimeFormat("en-US", {
