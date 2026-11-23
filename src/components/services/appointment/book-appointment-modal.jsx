@@ -12,7 +12,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useSession } from "@/lib/auth-client";
-import { addNewAppointment, getAppointments } from "@/lib/api/appointments";
+import {
+  addNewAppointment,
+  getAvailableTimeSlots,
+} from "@/lib/api/appointments";
 
 const timeSlots = [
   "10:00 AM",
@@ -74,21 +77,8 @@ const BookAppointmentModal = ({ service, className }) => {
 
     setIsLoadingSlots(true);
     try {
-      const result = await getAppointments();
-      const appointments = Array.isArray(result)
-        ? result
-        : result.appointments || result.data || [];
-      const unavailableSlots = appointments
-        .filter(
-          (appointment) =>
-            appointment.serviceId === serviceId &&
-            appointment.appointmentDate === nextDate &&
-            ["Pending", "Confirmed"].includes(
-              appointment.status,
-            ),
-        )
-        .map((appointment) => appointment.timeSlot);
-      setBookedSlots(unavailableSlots);
+      const result = await getAvailableTimeSlots(serviceId, nextDate);
+      setBookedSlots(result.bookedSlots || []);
     } catch (error) {
       toast.add({
         title: "Unable to load time slots",

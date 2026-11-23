@@ -31,11 +31,23 @@ export const cancelMyAppointment = async (appointmentId, customerId) => {
   return res.json();
 };
 
-// Both API: admin manages appointments; customers use it for time-slot availability.
+// Admin API: load all appointments for management.
 export const getAppointments = async () => {
   const res = await authFetch(`${BASE_URL}/appointments`);
   if (!res.ok) throw new Error("Unable to load appointments");
   return res.json();
+};
+
+// Customer API: load booked time slots for one service and date.
+export const getAvailableTimeSlots = async (serviceId, appointmentDate) => {
+  const res = await authFetch(
+    `${BASE_URL}/appointments/availability?serviceId=${serviceId}&appointmentDate=${appointmentDate}`,
+  );
+  const result = await res.json();
+  if (!res.ok) {
+    throw new Error(result.message || "Unable to load available time slots");
+  }
+  return result;
 };
 
 // Both API: load one appointment for admin or its owning customer.
