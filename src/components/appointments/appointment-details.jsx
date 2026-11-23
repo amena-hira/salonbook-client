@@ -117,7 +117,7 @@ const AppointmentDetails = ({ appointment, backHref, backLabel }) => {
                 </span>
               </Row>
               <Row label="Payment Method">{isPaid ? "Online Payment (Stripe)" : "Not paid yet"}</Row>
-              {isPaid && <Row label="Transaction ID">{transaction.stripeSessionId}</Row>}
+              {isPaid && <Row label="Transaction ID">{transaction._id}</Row>}
               <Row label="Amount">${appointment.servicePrice.toFixed(2)}</Row>
               {isPaid && <Row label="Payment Date">{formatDate(transaction.createdAt)}</Row>}
             </div>
