@@ -28,6 +28,7 @@ const formatDate = (date) =>
 const AppointmentDetails = ({ appointment, backHref, backLabel }) => {
   const { service, customer, transaction } = appointment;
   const isPaid = appointment.paymentStatus === "Paid";
+  const transactionId = transaction?.transactionId || transaction?._id;
   const statusClass = {
     Pending: "bg-amber-100 text-amber-700",
     Confirmed: "bg-green-100 text-green-700",
@@ -117,7 +118,13 @@ const AppointmentDetails = ({ appointment, backHref, backLabel }) => {
                 </span>
               </Row>
               <Row label="Payment Method">{isPaid ? "Online Payment (Stripe)" : "Not paid yet"}</Row>
-              {isPaid && <Row label="Transaction ID">{transaction._id}</Row>}
+               {isPaid && (
+                 <Row label="Transaction ID">
+                   <span className="block break-all font-mono text-xs">
+                     {transactionId || "—"}
+                   </span>
+                 </Row>
+               )}
               <Row label="Amount">${appointment.servicePrice.toFixed(2)}</Row>
               {isPaid && <Row label="Payment Date">{formatDate(transaction.createdAt)}</Row>}
             </div>
