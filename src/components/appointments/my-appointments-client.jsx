@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { CalendarDays, CircleX, Clock3, CreditCard, DollarSign, Eye } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 import { cancelMyAppointment } from "@/lib/actions/appointments";
@@ -142,20 +143,22 @@ const MyAppointmentsClient = ({ customerId, initialAppointments }) => {
                 <td className="px-5 py-4">
                   <div className="flex justify-end gap-2">
                     {appointment.status === "Confirmed" && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          toast.add({
-                            title: "Payment",
-                            description: "Payment is not available yet.",
-                            type: "info",
-                          })
-                        }
+                      <Link
+                        href={{
+                          pathname: "/checkout",
+                          query: {
+                            appointmentId: appointment.id,
+                            service: appointment.title,
+                            price: appointment.price,
+                            date: appointment.date,
+                            time: appointment.time,
+                          },
+                        }}
                         className="inline-flex items-center gap-1.5 rounded-md bg-[#3c2a1d] px-3 py-2 text-xs font-semibold text-white"
                       >
                         <CreditCard className="size-3.5" />
                         Pay Now
-                      </button>
+                      </Link>
                     )}
                     {appointment.status === "Pending" && (
                       <button
