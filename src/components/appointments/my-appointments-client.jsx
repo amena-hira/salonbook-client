@@ -17,6 +17,7 @@ const normalizeAppointment = (appointment) => ({
   price: appointment.servicePrice,
   createdAt: appointment.createdAt,
   status: formatStatus(appointment.status),
+  paymentStatus: formatStatus(appointment.paymentStatus || "Unpaid"),
   image: appointment.service.image,
 });
 
@@ -24,6 +25,11 @@ const statusStyles = {
   Confirmed: "bg-[#e7f6e7] text-[#258235]",
   Pending: "bg-[#fff2d6] text-[#9a6816]",
   Cancelled: "bg-[#fde8e5] text-[#bd3d32]",
+};
+
+const paymentStyles = {
+  Paid: "bg-[#e7f6e7] text-[#258235]",
+  Unpaid: "bg-[#fde8e5] text-[#bd3d32]",
 };
 
 const MyAppointmentsClient = ({ customerId, initialAppointments }) => {
@@ -81,14 +87,15 @@ const MyAppointmentsClient = ({ customerId, initialAppointments }) => {
         ))}
       </div>
       <div className="mt-8 overflow-x-auto rounded-xl border border-border bg-card">
-        <table className="w-full min-w-[900px] text-left">
+        <table className="w-full min-w-[1020px] text-left">
           <thead className="border-b border-border bg-cream/40 text-xs text-ash">
             <tr>
               <th className="px-5 py-3 font-medium">Service</th>
-              <th className="px-4 py-3 font-medium">Date &amp; Time</th>
+              <th className="px-4 py-3 font-medium">Appointment Date &amp; Time</th>
               <th className="px-4 py-3 font-medium">Price</th>
               <th className="px-4 py-3 font-medium">Request Date</th>
               <th className="px-4 py-3 font-medium">Status</th>
+              <th className="px-4 py-3 font-medium">Payment</th>
               <th className="px-5 py-3 text-right font-medium">Actions</th>
             </tr>
           </thead>
@@ -140,9 +147,16 @@ const MyAppointmentsClient = ({ customerId, initialAppointments }) => {
                     {appointment.status}
                   </span>
                 </td>
+                <td className="px-4 py-4">
+                  <span
+                    className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${paymentStyles[appointment.paymentStatus] || paymentStyles.Unpaid}`}
+                  >
+                    {appointment.paymentStatus}
+                  </span>
+                </td>
                 <td className="px-5 py-4">
                   <div className="flex justify-end gap-2">
-                    {appointment.status === "Confirmed" && (
+                    {appointment.status === "Confirmed" && appointment.paymentStatus !== "Paid" && (
                       <Link
                         href={{
                           pathname: "/checkout",
@@ -157,7 +171,7 @@ const MyAppointmentsClient = ({ customerId, initialAppointments }) => {
                         className="inline-flex items-center gap-1.5 rounded-md bg-[#3c2a1d] px-3 py-2 text-xs font-semibold text-white"
                       >
                         <CreditCard className="size-3.5" />
-                        Pay Now
+                        Pay
                       </Link>
                     )}
                     {appointment.status === "Pending" && (
