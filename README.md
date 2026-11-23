@@ -101,10 +101,10 @@ Create a `.env` file in both the client and server projects. Use your own values
 ### Client: `salonbook-client/.env`
 
 ```env
-API_BASE_URL=
+BACKEND_URL=
 BETTER_AUTH_SECRET=
 BETTER_AUTH_URL=
-BETTER_AUTH_DB_URI=
+MONGODB_URI=
 BETTER_AUTH_GOOGLE_CLIENT_ID=
 BETTER_AUTH_GOOGLE_CLIENT_SECRET=
 IMGBB_API_KEY=
