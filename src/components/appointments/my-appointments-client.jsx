@@ -10,6 +10,7 @@ const formatStatus = (status) => `${status}`.charAt(0).toUpperCase() + `${status
 
 const normalizeAppointment = (appointment) => ({
   id: appointment._id,
+  serviceId: appointment.service?._id || appointment.serviceId,
   title: appointment.service.serviceName,
   category: appointment.service.category,
   date: appointment.appointmentDate,
@@ -109,9 +110,12 @@ const MyAppointmentsClient = ({ customerId, initialAppointments }) => {
                   <div className="flex items-center gap-3">
                     {appointment.image && <span className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-cream"><Image src={appointment.image} alt="" fill sizes="64px" className="object-cover" /></span>}
                     <div>
-                      <h2 className="text-sm font-semibold text-charcoal">
+                      <Link
+                        href={`/services/${appointment.serviceId}`}
+                        className="text-sm font-semibold text-charcoal hover:text-[#684521] hover:underline"
+                      >
                         {appointment.title}
-                      </h2>
+                      </Link>
                       <span className="mt-1 inline-block rounded bg-cream px-2 py-0.5 text-xs text-charcoal">
                         {appointment.category}
                       </span>
