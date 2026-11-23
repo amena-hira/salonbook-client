@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { CalendarDays, ChevronDown, X } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 import {
@@ -33,6 +34,7 @@ const timeSlots = [
 ];
 
 const BookAppointmentModal = ({ service, className }) => {
+  const router = useRouter();
   const { data: session } = useSession();
   const isCustomer = session?.user?.role === "customer";
   const isBlocked =
@@ -136,6 +138,7 @@ const BookAppointmentModal = ({ service, className }) => {
       setOpen(false);
       setTime("");
       setMessage("");
+      router.push("/dashboard/customer/my-appointments");
     } catch (error) {
       toast.add({
         title: "Unable to book appointment",
