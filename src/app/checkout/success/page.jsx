@@ -25,18 +25,18 @@ const CheckoutSuccessPage = async ({ searchParams }) => {
 
   if (session.status === "open") redirect("/");
   if (session.status !== "complete" || session.payment_status !== "paid") {
-    redirect("/checkout?canceled=1");
+    redirect("/checkout/cancel");
   }
 
   const paymentIntent =
     typeof session.payment_intent === "object" ? session.payment_intent : null;
   const transactionId = paymentIntent?.id;
-  if (!transactionId) redirect("/checkout?canceled=1");
+  if (!transactionId) redirect("/checkout/cancel");
 
   try {
     await verifyCheckoutPayment(sessionId);
   } catch {
-    redirect("/checkout?canceled=1");
+    redirect("/checkout/cancel");
   }
 
   const lineItems = session.line_items?.data || [];
@@ -45,7 +45,7 @@ const CheckoutSuccessPage = async ({ searchParams }) => {
     lineItems[0]?.description ||
     getValue(query.service, "Salon appointment");
   const appointmentId = getValue(query.appointmentId, "—");
-  const amount = (session.amount_total || 0).toLocaleString("en-US", {
+  const amount = ((session.amount_total || 0) / 100).toLocaleString("en-US", {
     style: "currency",
     currency: session.currency || "usd",
   });
