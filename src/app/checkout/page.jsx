@@ -101,12 +101,14 @@ const CheckoutPage = async ({ searchParams }) => {
                 You&apos;ll be redirected to Stripe&apos;s secure checkout to complete
                 your payment. SalonBook does not store your card details.
               </p>
-              <button
-                type="button"
-                className="mt-6 inline-flex h-13 w-full items-center justify-center gap-2 rounded-lg bg-[#4c3019] px-5 text-base font-semibold text-white transition-colors hover:bg-[#684521]"
-              >
-                Pay ${total.toFixed(2)}
-              </button>
+              <form action="/api/checkout_sessions" method="POST">
+                <button
+                  type="submit"
+                  className="mt-6 inline-flex h-13 w-full items-center justify-center gap-2 rounded-lg bg-[#4c3019] px-5 text-base font-semibold text-white transition-colors hover:bg-[#684521]"
+                >
+                  Pay ${total.toFixed(2)}
+                </button>
+              </form>
               <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-ash">
                 <LockKeyhole className="size-3.5" aria-hidden="true" />
                 Powered by Stripe
