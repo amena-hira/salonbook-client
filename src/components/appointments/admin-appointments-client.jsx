@@ -15,17 +15,18 @@ import { updateAppointment } from "@/lib/api/appointments";
 
 const normalizeAppointment = (appointment) => ({
   id: appointment._id,
-  customer: appointment.customer.name,
-  email: appointment.customerEmail,
-  service: appointment.service.serviceName,
+  customer: appointment.customer?.name || "Unknown customer",
+  email: appointment.customer?.email || appointment.customerEmail || "—",
+  service: appointment.service?.serviceName || "Unknown service",
+  serviceId: appointment.service?._id || appointment.serviceId,
   price: appointment.servicePrice,
-  category: appointment.service.category,
+  category: appointment.service?.category,
   date: appointment.appointmentDate,
   time: appointment.timeSlot,
-  duration: appointment.service.duration,
+  duration: appointment.service?.duration,
   status: appointment.status,
   payment: appointment.paymentStatus,
-  image: appointment.service.image,
+  image: appointment.service?.image,
   createdAt: appointment.createdAt,
 });
 
@@ -200,9 +201,12 @@ const AdminAppointmentsClient = ({ initialAppointments }) => {
                         <Image src={item.image} alt="" fill sizes="36px" className="object-cover" />
                       </span>
                     )}
-                    <span className="text-sm font-semibold">
+                    <Link
+                      href={`/services/${item.serviceId}`}
+                      className="text-sm font-semibold hover:text-[#684521] hover:underline"
+                    >
                       {item.service}
-                    </span>
+                    </Link>
                   </div>
                 </td>
                 <td className="px-4 py-4">

@@ -238,9 +238,12 @@ const ManageServicesClient = ({ initialCategories, initialServices }) => {
                     <span className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-cream">
                       <Image src={service.image} alt="" fill sizes="56px" className="object-cover" />
                     </span>
-                    <span className="min-w-0 truncate text-sm font-semibold text-charcoal">
+                    <Link
+                      href={`/services/${service.id}`}
+                      className="min-w-0 truncate text-sm font-semibold text-charcoal hover:text-[#684521] hover:underline"
+                    >
                       {service.name}
-                    </span>
+                    </Link>
                   </div>
                 </td>
                 <td className="px-4 py-3">

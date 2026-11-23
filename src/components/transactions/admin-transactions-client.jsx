@@ -24,6 +24,7 @@ const formatDate = (value) =>
 
 const normalizeTransaction = (transaction) => ({
   id: transaction._id,
+  transactionId: transaction.transactionId || transaction._id,
   appointmentId: transaction.appointmentId,
   customer: transaction.customer?.name || "Unknown customer",
   email: transaction.customer?.email || "—",
@@ -43,7 +44,7 @@ const AdminTransactionsClient = ({ initialTransactions }) => {
   const payments = initialTransactions.map(normalizeTransaction);
   const visiblePayments = payments.filter(
     (payment) =>
-      `${payment.id} ${payment.customer} ${payment.service}`
+      `${payment.transactionId} ${payment.customer} ${payment.service}`
         .toLowerCase()
         .includes(search.toLowerCase()) &&
       (status === "All Statuses" || payment.status === status),
@@ -159,9 +160,9 @@ const AdminTransactionsClient = ({ initialTransactions }) => {
                 <td className="px-4 py-4">
                   <b
                     className="block max-w-52 truncate text-sm"
-                    title={payment.id}
+                    title={payment.transactionId}
                   >
-                    {payment.id}
+                    {payment.transactionId}
                   </b>
                   <span className="mt-1 block text-xs text-ash">
                     Stripe transaction
