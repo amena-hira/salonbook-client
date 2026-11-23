@@ -29,6 +29,7 @@ export async function POST(request) {
       ? `&appointmentId=${encodeURIComponent(appointmentId)}`
       : ''
     const successUrl = `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&service=${encodeURIComponent(service)}&price=${encodeURIComponent(price.toFixed(2))}${appointmentQuery}`
+    const cancelUrl = `${origin}/checkout/cancel?service=${encodeURIComponent(service)}&price=${encodeURIComponent(price.toFixed(2))}${appointmentQuery}`
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -49,8 +50,10 @@ export async function POST(request) {
       metadata: {
         customerId: userSession.user.id,
         appointmentId,
+        service,
       },
       success_url: successUrl,
+      cancel_url: cancelUrl,
       // Provide a name (for example, hosted_web_0001) to label this Checkout integration and measure its conversion independently
       integration_identifier: "salon_book_web_001",
     });

@@ -15,7 +15,6 @@ export const getTransactions = async () => {
 };
 
 export const verifyCheckoutPayment = async (sessionId) => {
-    console.log("session id: ", sessionId);
   const res = await fetch(`${BASE_URL}/payments/checkout-verify`, {
     method: "POST",
     headers: { "content-type": "application/json" },

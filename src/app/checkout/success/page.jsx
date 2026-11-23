@@ -7,6 +7,7 @@ import {
   Scissors,
   ShieldCheck,
 } from "lucide-react";
+import { stripe } from "@/lib/stripe";
 import { verifyCheckoutPayment } from "@/lib/actions/transactions";
 
 const getValue = (value, fallback) =>
@@ -18,22 +19,43 @@ const CheckoutSuccessPage = async ({ searchParams }) => {
 
   if (!sessionId) notFound();
 
+  const session = await stripe.checkout.sessions.retrieve(sessionId, {
+    expand: ["line_items", "payment_intent"],
+  });
+
+  if (session.status === "open") redirect("/");
+  if (session.status !== "complete" || session.payment_status !== "paid") {
+    redirect("/checkout?canceled=1");
+  }
+
+  const paymentIntent =
+    typeof session.payment_intent === "object" ? session.payment_intent : null;
+  const transactionId = paymentIntent?.id;
+  if (!transactionId) redirect("/checkout?canceled=1");
+
   try {
     await verifyCheckoutPayment(sessionId);
   } catch {
     redirect("/checkout?canceled=1");
   }
 
-  const service = getValue(query.service, "Salon appointment");
+  const lineItems = session.line_items?.data || [];
+  const service =
+    session.metadata?.service ||
+    lineItems[0]?.description ||
+    getValue(query.service, "Salon appointment");
   const appointmentId = getValue(query.appointmentId, "—");
-  const transactionId = getValue(query.transactionId, sessionId);
-  const amount = Number(getValue(query.price, "0"));
-  const total = Number.isFinite(amount) ? amount : 0;
+  const amount = (session.amount_total || 0).toLocaleString("en-US", {
+    style: "currency",
+    currency: session.currency || "usd",
+  });
   const paymentDate = new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "2-digit",
     year: "numeric",
-  }).format(new Date());
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(session.created * 1000));
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#f8f4f1] text-charcoal">
@@ -42,7 +64,7 @@ const CheckoutSuccessPage = async ({ searchParams }) => {
         className="pointer-events-none absolute left-1/2 top-1/2 size-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e4cfbd]/60 blur-[110px]"
       />
 
-      <header className="relative mx-auto flex h-20 w-full max-w-3xl items-center px-5 sm:px-8">
+      <header className="relative mx-auto flex h-15 w-full max-w-3xl items-center px-5 sm:px-8">
         <Link href="/" className="flex items-center gap-2.5">
           <span className="grid size-9 place-items-center rounded-full bg-[#4c3019] text-white">
             <Scissors className="size-5" aria-hidden="true" />
@@ -66,7 +88,7 @@ const CheckoutSuccessPage = async ({ searchParams }) => {
             Your appointment is paid
           </h1>
           <p className="mx-auto mt-4 max-w-sm text-sm leading-6 text-ash sm:text-base">
-            We received your payment of ${total.toFixed(2)} for {service}. Your
+            We received your payment of {amount} for {service}. Your
             appointment details are available in My Appointments.
           </p>
 
@@ -93,7 +115,7 @@ const CheckoutSuccessPage = async ({ searchParams }) => {
               </div>
               <div className="flex items-center justify-between gap-4 py-3">
                 <dt className="text-ash">Amount paid</dt>
-                <dd className="font-semibold text-charcoal">${total.toFixed(2)}</dd>
+                <dd className="font-semibold text-charcoal">{amount}</dd>
               </div>
               <div className="flex items-center justify-between gap-4 py-3">
                 <dt className="text-ash">Payment date</dt>
