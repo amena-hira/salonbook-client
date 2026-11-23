@@ -3,7 +3,7 @@
 import { authFetch, protectedMutation } from "@/lib/core/server";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+  process.env.API_BASE_URL || "http://localhost:8000";
 
 // Both API: load service categories.
 export const getCategories = async () => {

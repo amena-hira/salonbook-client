@@ -17,7 +17,7 @@ const CreateServiceForm = ({ categories }) => {
       const imageForm = new FormData();
       imageForm.append("image", image);
       const uploadResponse = await fetch(
-        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
+        `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
         { method: "POST", body: imageForm },
       );
       const upload = await uploadResponse.json();
