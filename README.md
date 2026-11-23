@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SalonBook
 
-## Getting Started
+## Project Name and Description
 
-First, run the development server:
+**SalonBook** is a full-stack salon appointment booking platform. Customers can browse active salon services, book available appointment slots, manage appointments, and pay for confirmed appointments through Stripe Checkout. Administrators can manage services, appointments, customers, dashboard statistics, and payment transactions.
+
+The project contains two applications:
+
+- **Client:** Next.js application for the customer and admin interfaces.
+- **Server:** Express and MongoDB API for services, appointments, users, transactions, and authorization.
+
+## Important Features
+
+- Customer-only public registration with Better Auth.
+- Email/password and Google sign-in options.
+- Role-based dashboards for **admin** and **customer** users.
+- Protected routes and token-protected backend APIs.
+- Public service browsing with search, category, duration, price, and sorting filters.
+- Protected service details pages and appointment booking.
+- Available time-slot loading and booked-slot disabling.
+- Customer appointment history, cancellation, and payment access for confirmed appointments.
+- Admin service creation, editing, activation/deactivation, and deletion.
+- Admin appointment approval and cancellation management.
+- Admin user blocking and unblocking.
+- Stripe Checkout integration and transaction history.
+- ImgBB image upload support for services and profile images.
+- Admin and customer dashboard statistics.
+
+## Technology Stack
+
+### Client
+
+- Next.js 16
+- React 19
+- Tailwind CSS 4
+- Better Auth
+- Stripe
+- Lucide React
+- MongoDB adapter for Better Auth
+
+### Server
+
+- Node.js
+- Express 5
+- MongoDB Node.js Driver
+- Stripe
+- CORS
+- dotenv
+
+## Installation Instructions
+
+Clone both repositories:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/amena-hira/salonbook-client.git
+git clone https://github.com/amena-hira/salonbook-server.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Install dependencies in each project:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+cd salonbook-client
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd salonbook-server
+npm install
+```
 
-## Learn More
+## How to Run the Project Locally
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Start the server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+In the server project:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cd salonbook-server
+npm run dev
+```
 
-## Deploy on Vercel
+The server runs on `http://localhost:8000` by default.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 2. Start the client
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+In a separate terminal, in the client project:
+
+```bash
+cd salonbook-client
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 3. Create environment files
+
+Create a `.env` file in both the client and server projects. Use your own values; do not commit secret values to Git.
+
+## Required Environment Variables
+
+### Client: `salonbook-client/.env`
+
+```env
+API_BASE_URL=
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=
+BETTER_AUTH_DB_URI=
+BETTER_AUTH_GOOGLE_CLIENT_ID=
+BETTER_AUTH_GOOGLE_CLIENT_SECRET=
+IMGBB_API_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
+```
+
+### Server: `salonbook-server/.env`
+
+```env
+MONGODB_URI=
+STRIPE_SECRET_KEY=
+PORT=
+```
+
+`PORT` is optional because the server defaults to `8000`.
+
+## Live Website Link
+
+https://salonbook-client-tau.vercel.app/
+
+## Repository Links
+
+- **Client Repository:** https://github.com/amena-hira/salonbook-client
+- **Server Repository:** https://github.com/amena-hira/salonbook-server
