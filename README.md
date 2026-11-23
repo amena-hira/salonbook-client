@@ -1,5 +1,7 @@
 # SalonBook
 
+> **Local environment setup:** Before running the project, create `.env` files for the client and server using the exact variable names listed in [Required Environment Variables](#required-environment-variables).
+
 ## Project Name and Description
 
 **SalonBook** is a full-stack salon appointment booking platform. Customers can browse active salon services, book available appointment slots, manage appointments, and pay for confirmed appointments through Stripe Checkout. Administrators can manage services, appointments, customers, dashboard statistics, and payment transactions.
@@ -105,9 +107,12 @@ BACKEND_URL=
 BETTER_AUTH_SECRET=
 BETTER_AUTH_URL=
 MONGODB_URI=
+
 BETTER_AUTH_GOOGLE_CLIENT_ID=
 BETTER_AUTH_GOOGLE_CLIENT_SECRET=
+
 NEXT_PUBLIC_IMGBB_API_KEY=
+
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
 STRIPE_SECRET_KEY=
 ```
@@ -115,8 +120,9 @@ STRIPE_SECRET_KEY=
 ### Server: `salonbook-server/.env`
 
 ```env
-MONGODB_URI=
 STRIPE_SECRET_KEY=
+DB_USER=
+DB_PASSWORD=
 PORT=
 ```
 
