@@ -133,7 +133,7 @@ const AdminTransactionsClient = ({ initialTransactions }) => {
       </div>
 
       <div className="mt-7 overflow-x-auto rounded-xl border border-border bg-card">
-        <table className="w-full min-w-[980px] text-left">
+        <table className="w-full min-w-[1050px] text-left">
           <thead className="bg-cream/50 text-xs">
             <tr>
               {[
@@ -205,9 +205,9 @@ const AdminTransactionsClient = ({ initialTransactions }) => {
                     {payment.currency}
                   </span>
                 </td>
-                <td className="px-4 py-4">
+                <td className="min-w-28 px-4 py-4">
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${payment.status === "Paid" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                    className={`inline-flex items-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${payment.status === "Paid" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
                   >
                     ● {payment.status}
                   </span>
