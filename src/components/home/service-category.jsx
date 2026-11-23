@@ -41,7 +41,7 @@ const ServiceCategory = async () => {
                             return (
                                 <Link
                                     key={category._id}
-                                    href={`/services?status=active&category=${category.name}`}
+                                    href={`/services?${new URLSearchParams({ status: "active", category: category.name })}`}
                                     className="group relative min-h-48 overflow-hidden rounded-lg bg-charcoal"
                                 >
                                     <Image
