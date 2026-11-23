@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Menu, Scissors } from "lucide-react";
 import NavLinks from "@/components/shared/navbar/nav-links";
 import AuthenticateNavItem from "./authenticate-nav";
+import GuestNavLink from "./guest-nav-link";
 
 
 const MobileNavigation = () => (
@@ -20,12 +21,12 @@ const MobileNavigation = () => (
       <div className="flex flex-col items-stretch gap-1">
         <NavLinks mobile />
       </div>
-      <Link
+      <GuestNavLink
         href="/sign-in"
         className="mt-3 block w-full rounded-md bg-cream px-4 py-3 text-center text-sm font-semibold text-charcoal transition-colors hover:bg-white"
       >
         Sign In
-      </Link>
+      </GuestNavLink>
     </nav>
   </details>
 );
@@ -50,12 +51,12 @@ const Navbar = () => {
 
         <div className="flex items-center gap-1 sm:gap-5">
           <AuthenticateNavItem/>
-          <Link
+          <GuestNavLink
             href="/sign-up"
             className="hidden rounded-md bg-cream px-6 py-3 text-sm font-semibold whitespace-nowrap text-charcoal transition-colors hover:bg-white lg:block"
           >
             Sign Up
-          </Link>
+          </GuestNavLink>
           <MobileNavigation />
         </div>
       </div>
