@@ -21,10 +21,10 @@ const MobileNavigation = () => (
         <NavLinks mobile />
       </div>
       <Link
-        href="/book-appointment"
+        href="/sign-in"
         className="mt-3 block w-full rounded-md bg-cream px-4 py-3 text-center text-sm font-semibold text-charcoal transition-colors hover:bg-white"
       >
-        Book Appointment
+        Sign In
       </Link>
     </nav>
   </details>
@@ -51,10 +51,10 @@ const Navbar = () => {
         <div className="flex items-center gap-1 sm:gap-5">
           <AuthenticateNavItem/>
           <Link
-            href="/book-appointment"
+            href="/sign-up"
             className="hidden rounded-md bg-cream px-6 py-3 text-sm font-semibold whitespace-nowrap text-charcoal transition-colors hover:bg-white lg:block"
           >
-            Book Appointment
+            Sign Up
           </Link>
           <MobileNavigation />
         </div>
